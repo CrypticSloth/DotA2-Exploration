@@ -10,7 +10,7 @@ import sys
 from current_dota_version import current_dota_version
 import time
 
-path = 'C:/Users/lizar/Google Drive (erik.sorensen20@houghton.edu)/DotaAnalysis/versions'
+path = '../versions'
 current_time = datetime.now().strftime('%m/%d/%Y %H:%M')
 
 # Current version of dota right now
