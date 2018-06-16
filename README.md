@@ -3,7 +3,7 @@ This Repo contains all of my analysis and content that I have done working with 
 
 **My Scripts**
 
-My scripts first get the current dota version from [GamePedia](gamepedia.com/Game_Versions "GamePedia.com") using the BeautifulSoup package in Python.
+My scripts first get the current dota version from [GamePedia](gamepedia.com/Game_Versions "GamePedia.com") using the BeautifulSoup package in Python to parse the websites text to find the most recent version as they update their website quite regularly and for some reason the API's that I grab the data from do not have the current version.
 
 Then it grabs the data from the last 100 *Professional* dota matches using the [opendota API](docs.opendota.com). These matches are considered professional based on if the game is part of a tournament with money prizes.
 
