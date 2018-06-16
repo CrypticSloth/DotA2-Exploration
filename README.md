@@ -1,30 +1,20 @@
-Dota Analysis README.txt
+This Repo contains all of my analysis and content that I have done working with Dota Analysis. It contains some scripts for collecting data from the Opendota.com API as well as the Stratz API. It also contains some of my ad hoc analysis of the data. So far I have started to work on some market basket analysis trying to analyze drafts, as well as some analysis based on if there is a correlation between number of wards placed and winrate. Feel free to contact me if you have any suggestions on any more Ad Hocs that might be useful/interesting.
 
-First grabs the current dota version from gamepedia.com/Game_Versions using BeautifulSoup
 
-Then grabs the data of the last 100 pro dota matches using the opendota api.
+**My Scripts**
+
+My scripts first get the current dota version from [GamePedia](gamepedia.com/Game_Versions "GamePedia.com") using the BeautifulSoup package in Python.
+
+Then it grabs the data from the last 100 *Professional* dota matches using the [opendota API](docs.opendota.com). These matches are considered professional based on if the game is part of a tournament with money prizes.
+
+In another script, I add more data that is grabbed from the [stratz API](docs.stratz.com) that captures every event. This includes player positions and everything they do at every point in the game. I am hoping to do some movement and ward placement analysis of certain professional teams in the future.
 
 When it grabs this data it puts it in its appropriate version folder based on the current version found from gamepedia. Also adds some useful information like date collected, current version (in a readable format), the two team names that played that game, and the tournament the game was played in.
 
 The data is in json format.
 
-*********************************************
+I have made this run every night on my Windows computer using Task Scheduler. I have been collecting pro matches since patch 7.07d. If you would like some of this data you can email me at sorensen.erik48@gmail.com
 
-Future Analysis Ideas:
-	Movement analysis on teams to find patterns in there movement
-		Find out what strategy works best for the current meta (splitpush, 5 manning, etc.)
-		Maybe find new movement strats with unsupervised learning
-			Thoughts:
-				Use the two features (time and location) and for every second plot those on map (probably whole team)
-				Since the data is in two dimensions we can easily graph and run unsupervised learning to group the movements of the team.
-				When the movements are grouped we can look at it and identify some common movements that teams do.
-					Maybe even map these movements onto a dota map for easy identification and visualization (woudld be neat for a final visualization report)
-	Relation to number of wards placed and winrate in lower mmr games (where sometimes few wards will be placed in a game)
-	Some kind of draft analysis, find what heros play together the best etc using machine learning
-		Maybe first just find the team comps that have the highest avg winrate
-		Association rules (apriori)
-	Relationship between toxic chatting and winrate
+**Analysis**
 
-	Analysing certain teams patterns.
-		-Sneaky Ward Placements 
-		-Smoke Timings
+This folder contains all of my Ad Hoc analysis. I try to keep things as published as possible but this is a constant work in progress so things will sometimes be unfinished/not in a clean or published state.
