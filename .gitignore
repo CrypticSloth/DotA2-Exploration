@@ -1,0 +1,9 @@
+*.ipynb_checkpoints
+
+versions/
+versions_test/
+
+*__pycache__
+*.bat
+*.lnk
+*.pdf
