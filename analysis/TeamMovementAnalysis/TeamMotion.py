@@ -4,9 +4,12 @@ import json
 import os
 import requests
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+os.chdir('C:/GitHub/DotA2-Exploration/analysis/TeamMovementAnalysis')
 
 # Reading data back
-path = "C:/Users/Erik/Google Drive (erik.sorensen20@houghton.edu)/DotaAnalysis/versions_test/7.10/3781456589.json"
+
+path = "../../versions_test/7.10/3781456589.json"
 
 with open(path,'r') as outfile:
         data = json.load(outfile)
@@ -26,6 +29,9 @@ print(min(x),max(x))
 print(min(y),max(y))
 print(max(time)/60)
 
+img = np.array(mpimg.imread('dotamap.png'))
+print(img)
+
 plt.plot(x,y)
 plt.title("'{}' movement".format(data['players'][0]['name']))
 plt.show()
@@ -33,7 +39,7 @@ plt.show()
 data['players'][0]['name']
 
 # Reading data back
-path = "C:/Users/Erik/Google Drive (erik.sorensen20@houghton.edu)/DotaAnalysis/versions_test/7.10/"
+path = "../../versions_test/7.10/"
 
 picks_bans = []
 radiant_wins = []
