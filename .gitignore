@@ -1,10 +1,10 @@
 *.ipynb_checkpoints
-
 versions/
 versions_test/
-
 *__pycache__
 *.bat
 *.lnk
 *.pdf
 PrivateNotes.md
+.Rproj.user
+DotA2-Exploration.Rproj
