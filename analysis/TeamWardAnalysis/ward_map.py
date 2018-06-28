@@ -1,8 +1,8 @@
 # Plot the ward map using plotly
 # Eventually make a interactive webpage with dash 
 
-import plotly
-import plotly.plotly as py
+from plotly import __version__
+from plotly.offline import init_notebook_mode, plot, iplot
 import plotly.graph_objs as go
 import numpy as np
 import json
@@ -29,22 +29,43 @@ for i in data['eventData']['wardEvents']:
         if i['wardType'] == 0:
             x_obs.append(i['x'])
             y_obs.append(i['y'])
-        else if i['wardType'] == 1:
+        if i['wardType'] == 1:
             x_sent.append(i['x'])
             y_sent.append(i['y'])
 
-trace1= go.Scatter(x=[0,0.5,1,2,2.2],y=[1.23,2.5,0.42,3,1])
-layout= go.Layout(images= [dict(
-                  source= "actualWards.png",
+trace1= go.Scatter(x=x_obs + x_sent,y=y_obs + y_sent,
+                   mode='markers', 
+                   marker = dict(color = "rgb(241, 244, 66)"))
+size = 128
+layout= go.Layout(width=750,
+                  height=750,
+                  xaxis=dict(
+                      autorange=False,
+                      showgrid=False,
+                      zeroline=False,
+                      ticks='',
+                      showticklabels=False,
+                      range=[63,192],
+                  ),
+                  yaxis=dict(
+                      autorange=False,
+                      showgrid=False,
+                      zeroline=False,
+                      ticks='',
+                      showticklabels=False,
+                      range=[63,192]
+                  ),
+                  images= [dict(
+                  source= "https://raw.githubusercontent.com/SorensenErik/DotA2-Exploration/master/analysis/TeamWardAnalysis/actualWards.png",
                   xref= "x",
                   yref= "y",
-                  x= 0,
-                  y= 3,
-                  sizex= 2,
-                  sizey= 2,
+                  x= 63,
+                  y= 192,
+                  sizex= size,
+                  sizey= size,
                   sizing= "stretch",
-                  opacity= 0.5,
                   layer= "below")])
 
+# Plot to html file
 fig=go.Figure(data=[trace1],layout=layout)
-plotly.offline.plot(fig)
+plot(fig)
