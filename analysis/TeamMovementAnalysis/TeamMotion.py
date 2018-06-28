@@ -48,3 +48,7 @@ for filename in os.listdir(path):
         data = json.load(outfile)
         picks_bans.append(data['picks_bans'])
         radiant_wins.append(data['radiant_win'])
+
+### Future Analysis
+### Predict future movement with prophet (facebook package)
+### plot movement on a 2d graph where time is the x axis and a combination of the x+y coordinates is the y axis
