@@ -10,6 +10,26 @@ import json
 with open('../../versions_test/7.17/3944571593.json', 'r') as json_file:  
     data = json.load(json_file)
 
+# Lets test another matches ward map to see if it holds out
+# with open('../../versions_test/7.18/3973127831.json', 'r') as json_file:  
+#     data_test = json.load(json_file)
+
+# x_obs = []
+# y_obs = []
+# x_sent = []
+# y_sent = []
+
+# for i in data_test['eventData']['wardEvents']:
+#     if i['x'] != 0:
+#         if i['wardType'] == 0:
+#             x_obs.append(i['x'])
+#             y_obs.append(i['y'])
+#         if i['wardType'] == 1:
+#             x_sent.append(i['x'])
+#             y_sent.append(i['y'])
+
+# Hooray this does work with other files which means it works as expected
+
 # Get player name
 data["players"][0]["personaname"]
 
@@ -56,7 +76,7 @@ layout= go.Layout(width=750,
                       range=[63,192]
                   ),
                   images= [dict(
-                  source= "https://raw.githubusercontent.com/SorensenErik/DotA2-Exploration/master/analysis/TeamWardAnalysis/actualWards.png",
+                  source= "https://raw.githubusercontent.com/SorensenErik/DotA2-Exploration/master/analysis/TeamWardAnalysis/detailed_707.jpg",
                   xref= "x",
                   yref= "y",
                   x= 63,
