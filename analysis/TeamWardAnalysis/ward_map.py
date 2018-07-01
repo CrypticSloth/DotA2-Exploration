@@ -30,19 +30,87 @@ with open('../../versions_test/7.17/3944571593.json', 'r') as json_file:
 
 # Hooray this does work with other files which means it works as expected
 
-# Get player name
-data["players"][0]["personaname"]
+# Get player names
+for i in range(len(data['players'])):
+    print(data['players'][i]['personaname'])
 
-# Get the players observer ward log
-data['players'][0]['obs_log']
-data['players'][0]['sen_log']
+# Get the players observer ward log for both teams
+
+# Make the dictionaries we will place the data into
+obs_wards_radiant = {
+    '1_x':[],
+    '1_y':[],
+    '2_x':[],
+    '2_y':[],
+    '3_x':[],
+    '3_y':[],
+    '4_x':[],
+    '4_y':[],
+    '5_x':[],
+    '5_y':[]
+}
+
+obs_wards_dire = {
+    '1_x':[],
+    '1_y':[],
+    '2_x':[],
+    '2_y':[],
+    '3_x':[],
+    '3_y':[],
+    '4_x':[],
+    '4_y':[],
+    '5_x':[],
+    '5_y':[]
+}
+
+sen_wards_radiant = {
+    '1_x':[],
+    '1_y':[],
+    '2_x':[],
+    '2_y':[],
+    '3_x':[],
+    '3_y':[],
+    '4_x':[],
+    '4_y':[],
+    '5_x':[],
+    '5_y':[]
+}
+
+sen_wards_dire = {
+    '1_x':[],
+    '1_y':[],
+    '2_x':[],
+    '2_y':[],
+    '3_x':[],
+    '3_y':[],
+    '4_x':[],
+    '4_y':[],
+    '5_x':[],
+    '5_y':[]
+}
+
+# Get ward data for radiant
+for player in range(5):
+    for i in range(len(data['players'][player]['obs_left_log'])):
+        obs_wards_radiant['{:}_x'.format(player+1)].append(data['players'][player]['obs_left_log'][i]['x'])
+        obs_wards_radiant['{:}_y'.format(player+1)].append(data['players'][player]['obs_left_log'][i]['y'])
+    for i in range(len(data['players'][player]['sen_left_log'])):
+        sen_wards_radiant['{:}_x'.format(player+1)].append(data['players'][player]['sen_left_log'][i]['x'])
+        sen_wards_radiant['{:}_y'.format(player+1)].append(data['players'][player]['sen_left_log'][i]['y'])
+
+# Get data for dire
+for player in range(5,10):
+    for i in range(len(data['players'][player]['obs_left_log'])):
+        obs_wards_dire['{:}_x'.format(player-4)].append(data['players'][player]['obs_left_log'][i]['x'])
+        obs_wards_dire['{:}_y'.format(player-4)].append(data['players'][player]['obs_left_log'][i]['y'])
+    for i in range(len(data['players'][player]['sen_left_log'])):
+        sen_wards_dire['{:}_x'.format(player-4)].append(data['players'][player]['sen_left_log'][i]['x'])
+        sen_wards_dire['{:}_y'.format(player-4)].append(data['players'][player]['sen_left_log'][i]['y'])
 
 x_obs = []
 y_obs = []
 x_sent = []
 y_sent = []
-
-
 
 for i in data['eventData']['wardEvents']:
     if i['x'] != 0:
@@ -53,9 +121,17 @@ for i in data['eventData']['wardEvents']:
             x_sent.append(i['x'])
             y_sent.append(i['y'])
 
-trace1= go.Scatter(x=x_obs + x_sent,y=y_obs + y_sent,
-                   mode='markers', 
-                   marker = dict(color = "rgb(241, 244, 66)"))
+Observer_Wards= go.Scatter(
+                    x=x_obs,
+                    y=y_obs,
+                    mode='markers', 
+                    marker = dict(color = "rgb(98, 244, 66)"))
+
+Sentry_Wards= go.Scatter(
+                    x=x_sent,
+                    y=y_sent,
+                    mode='markers', 
+                    marker = dict(color = "rgb(65, 137, 244)"))
 size = 128
 layout= go.Layout(width=750,
                   height=750,
@@ -87,5 +163,5 @@ layout= go.Layout(width=750,
                   layer= "below")])
 
 # Plot to html file
-fig=go.Figure(data=[trace1],layout=layout)
+fig=go.Figure(data=[Observer_Wards,Sentry_Wards],layout=layout)
 plot(fig)
