@@ -142,7 +142,7 @@ for i in range(5):
         trace0=go.Scatter(
             x=obs_wards_radiant['{:}_x'.format(i+1)],
             y=obs_wards_radiant['{:}_y'.format(i+1)],
-            text='player: {:}',
+            text='player: {:}'.format(player_names[i]),
             mode='markers', 
             marker = dict(color = "rgb(98, 244, 66)")
             #. time: {:}'.format(player_names[i],obs_wards_radiant['{:}_time'.format(i+1)])
@@ -151,7 +151,7 @@ for i in range(5):
         trace1=go.Scatter(
             x=obs_wards_dire['{:}_x'.format(i+1)],
             y=obs_wards_dire['{:}_y'.format(i+1)],
-            text='player: {:}',
+            text='player: {:}'.format(player_names[i+5]),
             mode='markers', 
             marker = dict(color = "rgb(98, 244, 66)")
             #. time: {:}'.format(player_names[i+5],obs_wards_radiant['{:}_time'.format(i+1)])
@@ -242,5 +242,5 @@ layout= go.Layout(width=750,
                   layer= "below")])
 
 # Plot to html file
-fig=go.Figure(data=[Observer_Wards,Sentry_Wards],layout=layout)
+fig=go.Figure(data=traces,layout=layout)
 plot(fig)
