@@ -142,22 +142,58 @@ for i in range(5):
         trace0=go.Scatter(
             x=obs_wards_radiant['{:}_x'.format(i+1)],
             y=obs_wards_radiant['{:}_y'.format(i+1)],
-            text='player: {:}'.format(player_names[i]),
-            mode='markers', 
-            marker = dict(color = "rgb(98, 244, 66)")
-            #. time: {:}'.format(player_names[i],obs_wards_radiant['{:}_time'.format(i+1)])
+            name=player_names[i],
+            text=obs_wards_radiant['{:}_time'.format(i+1)],
+            mode='markers',
+            marker = dict(color = "rgb(98, 244, 66)"),
+            hoverlabel=dict(
+                      bgcolor='black',
+                      bordercolor='rgb(98, 244, 66)'
+                  )
         )
     if obs_wards_dire['{:}_x'.format(i+1)] != []:
         trace1=go.Scatter(
             x=obs_wards_dire['{:}_x'.format(i+1)],
             y=obs_wards_dire['{:}_y'.format(i+1)],
-            text='player: {:}'.format(player_names[i+5]),
+            name=player_names[i+5],
+            text=obs_wards_dire['{:}_time'.format(i+1)],
             mode='markers', 
-            marker = dict(color = "rgb(98, 244, 66)")
-            #. time: {:}'.format(player_names[i+5],obs_wards_radiant['{:}_time'.format(i+1)])
+            marker = dict(color = "rgb(98, 244, 66)"),
+                        hoverlabel=dict(
+                      bgcolor='black',
+                      bordercolor='rgb(98, 244, 66)'
+                  ),
         )
-        traces.append(trace0)
-        traces.append(trace1)
+    if sen_wards_radiant['{:}_x'.format(i+1)] != []:
+        trace2=go.Scatter(
+            x=sen_wards_radiant['{:}_x'.format(i+1)],
+            y=sen_wards_radiant['{:}_y'.format(i+1)],
+            name=player_names[i],
+            text=sen_wards_radiant['{:}_time'.format(i+1)],
+            mode='markers',
+            marker = dict(color = "rgb(26, 140, 255)"),
+            hoverlabel=dict(
+                      bgcolor='black',
+                      bordercolor='rgb(26, 140, 255)'
+                  ),
+        )
+    if sen_wards_dire['{:}_x'.format(i+1)] != []:
+        trace3=go.Scatter(
+            x=sen_wards_dire['{:}_x'.format(i+1)],
+            y=sen_wards_dire['{:}_y'.format(i+1)],
+            name=player_names[i+5],
+            text=sen_wards_dire['{:}_time'.format(i+1)],
+            mode='markers', 
+            marker = dict(color = "rgb(26, 140, 255)"),
+                        hoverlabel=dict(
+                      bgcolor='black',
+                      bordercolor='rgb(26, 140, 255)'
+                  ),
+        )
+    traces.append(trace0)
+    traces.append(trace1)
+    traces.append(trace2)
+    traces.append(trace3)
 
 x_obs = []
 y_obs = []
@@ -173,46 +209,12 @@ for i in data['eventData']['wardEvents']:
             x_sent.append(i['x'])
             y_sent.append(i['y'])
 
-Observer_Wards_Radiant_1 = go.Scatter(
-                    x=obs_wards_radiant['1_x'],
-                    y=obs_wards_radiant['1_y'],
-                    mode='markers', 
-                    marker = dict(color = "rgb(98, 244, 66)"))
-
-Observer_Wards_Radiant_2 = go.Scatter(
-                    x=obs_wards_radiant['2_x'],
-                    y=obs_wards_radiant['2_y'],
-                    mode='markers', 
-                    marker = dict(color = "rgb(98, 244, 66)"))
-
-Observer_Wards_Radiant_3 = go.Scatter(
-                    x=obs_wards_radiant['3_x'],
-                    y=obs_wards_radiant['3_y'],
-                    mode='markers', 
-                    marker = dict(color = "rgb(98, 244, 66)"))
-
-Observer_Wards_Radiant_4 = go.Scatter(
-                    x=obs_wards_radiant['4_x'],
-                    y=obs_wards_radiant['4_y'],
-                    mode='markers', 
-                    marker = dict(color = "rgb(98, 244, 66)"))
-
-Observer_Wards_Radiant_5 = go.Scatter(
-                    x=obs_wards_radiant['5_x'],
-                    y=obs_wards_radiant['5_y'],
-                    mode='markers', 
-                    marker = dict(color = "rgb(98, 244, 66)"))
-
-Sentry_Wards_Dire = go.Scatter(
-                    x=obs_wards_radiant['1_x'],
-                    y=obs_wards_radiant['1_y'],
-                    mode='markers', 
-                    marker = dict(color = "rgb(65, 137, 244)"))
 size = 128
 layout= go.Layout(width=750,
                   height=750,
                   hovermode= 'closest',
                   title="Ward map of match: {:}".format(match),
+                  showlegend=False,
                   xaxis=dict(
                       autorange=False,
                       showgrid=False,
