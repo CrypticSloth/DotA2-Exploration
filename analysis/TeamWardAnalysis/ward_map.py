@@ -14,26 +14,6 @@ with open('../../versions_test/7.17/{:}.json'.format(match), 'r') as json_file:
 import time
 time.strftime('%M:%S', time.gmtime(1200))
 
-# Lets test another matches ward map to see if it holds out
-# with open('../../versions_test/7.18/3973127831.json', 'r') as json_file:  
-#     data_test = json.load(json_file)
-
-# x_obs = []
-# y_obs = []
-# x_sent = []
-# y_sent = []
-
-# for i in data_test['eventData']['wardEvents']:
-#     if i['x'] != 0:
-#         if i['wardType'] == 0:
-#             x_obs.append(i['x'])
-#             y_obs.append(i['y'])
-#         if i['wardType'] == 1:
-#             x_sent.append(i['x'])
-#             y_sent.append(i['y'])
-
-# Hooray this does work with other files which means it works as expected
-
 # Get player names
 player_names = []
 for i in range(len(data['players'])):
@@ -195,19 +175,100 @@ for i in range(5):
     traces.append(trace2)
     traces.append(trace3)
 
-x_obs = []
-y_obs = []
-x_sent = []
-y_sent = []
+# Create shape objects
+shapes_obs_x_rad = []
+shapes_obs_y_rad = []
+shapes_obs_x_dire = []
+shapes_obs_y_dire = []
 
-for i in data['eventData']['wardEvents']:
-    if i['x'] != 0:
-        if i['wardType'] == 0:
-            x_obs.append(i['x'])
-            y_obs.append(i['y'])
-        if i['wardType'] == 1:
-            x_sent.append(i['x'])
-            y_sent.append(i['y'])
+shapes_sen_x_rad = []
+shapes_sen_y_rad = []
+shapes_sen_x_dire = []
+shapes_sen_y_dire = []
+
+for i in range(5):
+    shapes_obs_x_rad.append(obs_wards_radiant['{:}_x'.format(i+1)])
+    shapes_obs_y_rad.append(obs_wards_radiant['{:}_y'.format(i+1)])
+    shapes_obs_x_dire.append(obs_wards_dire['{:}_x'.format(i+1)])
+    shapes_obs_y_dire.append(obs_wards_dire['{:}_y'.format(i+1)])
+    shapes_sen_x_rad.append(sen_wards_radiant['{:}_x'.format(i+1)])
+    shapes_sen_y_rad.append(sen_wards_radiant['{:}_y'.format(i+1)])
+    shapes_sen_x_dire.append(sen_wards_dire['{:}_x'.format(i+1)])
+    shapes_sen_y_dire.append(sen_wards_dire['{:}_y'.format(i+1)])
+
+shapes_obs_x_rad = [item for sublist in shapes_obs_x_rad for item in sublist]
+shapes_obs_y_rad = [item for sublist in shapes_obs_y_rad for item in sublist]
+shapes_obs_x_dire = [item for sublist in shapes_obs_x_dire for item in sublist]
+shapes_obs_y_dire = [item for sublist in shapes_obs_y_dire for item in sublist]
+shapes_sen_x_rad = [item for sublist in shapes_sen_x_rad for item in sublist]
+shapes_sen_y_rad = [item for sublist in shapes_sen_y_rad for item in sublist]
+shapes_sen_x_dire = [item for sublist in shapes_sen_x_dire for item in sublist]
+shapes_sen_y_dire = [item for sublist in shapes_sen_y_dire for item in sublist]
+
+shapes = []
+for i in range(len(shapes_obs_x_rad)):
+    shape0=dict(
+        type='circle',
+        xref='x',
+        yref='y',
+        x0=shapes_obs_x_rad[i] - 10, # Obs wards have a radius of 10. so subtract 10 from x0 and y0 and add 10 to x1,y1
+        y0=shapes_obs_y_rad[i] - 10, # Cant do a list of coordinates so will have to make multiple shape objects
+        x1=shapes_obs_x_rad[i] + 10,
+        y1=shapes_obs_y_rad[i] + 10,
+        fillcolor='rgba(50, 171, 96, 0.1)',
+        line=dict(  
+            color='rgba(50, 171, 96, 1)'
+        ),
+    )
+    shapes.append(shape0)
+
+for i in range(len(shapes_obs_x_dire)):
+    shape0=dict(
+        type='circle',
+        xref='x',
+        yref='y',
+        x0=shapes_obs_x_dire[i] - 10, 
+        y0=shapes_obs_y_dire[i] - 10, 
+        x1=shapes_obs_x_dire[i] + 10,
+        y1=shapes_obs_y_dire[i] + 10,
+        fillcolor='rgba(50, 171, 96, 0.1)',
+        line=dict(  
+            color='rgba(255, 0, 57,1)'
+        ),
+    )
+    shapes.append(shape0)
+
+for i in range(len(shapes_sen_x_rad)):
+    shape0=dict(
+        type='circle',
+        xref='x',
+        yref='y',
+        x0=shapes_sen_x_rad[i] - 5.5, # sent wards have a radius of about 5.5
+        y0=shapes_sen_y_rad[i] - 5.5, 
+        x1=shapes_sen_x_rad[i] + 5.5,
+        y1=shapes_sen_y_rad[i] + 5.5,
+        fillcolor='rgba(0, 102, 255,0.1)',
+        line=dict(  
+            color='rgba(50, 171, 96, 1)'
+        ),
+    )
+    shapes.append(shape0)
+
+for i in range(len(shapes_sen_x_dire)):
+    shape0=dict(
+        type='circle',
+        xref='x',
+        yref='y',
+        x0=shapes_sen_x_dire[i] - 5.5,
+        y0=shapes_sen_y_dire[i] - 5.5,
+        x1=shapes_sen_x_dire[i] + 5.5,
+        y1=shapes_sen_y_dire[i] + 5.5,
+        fillcolor='rgba(0, 102, 255,0.1)',
+        line=dict(  
+            color='rgba(255, 0, 57,1)'
+        ),
+    )
+    shapes.append(shape0)
 
 size = 128
 layout= go.Layout(width=750,
@@ -241,7 +302,9 @@ layout= go.Layout(width=750,
                   sizex= size,
                   sizey= size,
                   sizing= "stretch",
-                  layer= "below")])
+                  layer= "below",
+                  )],
+                  shapes=shapes)
 
 # Plot to html file
 fig=go.Figure(data=traces,layout=layout)
