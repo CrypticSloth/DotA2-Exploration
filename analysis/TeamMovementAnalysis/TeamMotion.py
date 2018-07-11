@@ -36,8 +36,6 @@ plt.plot(x,y)
 plt.title("'{}' movement".format(data['players'][0]['name']))
 plt.show()
 
-data['players'][0]['name']
-
 # Reading data back
 path = "../../versions_test/7.10/"
 
