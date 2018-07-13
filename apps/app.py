@@ -13,7 +13,7 @@ from plotly.offline import plot
 ##############################
 
 match = 3944571593
-with open('versions_test/7.17/{:}.json'.format(match), 'r') as json_file:  
+with open('{:}.json'.format(match), 'r') as json_file:  
     data = json.load(json_file)
 
 import time
