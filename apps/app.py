@@ -335,15 +335,18 @@ fig['layout']['plot_bgcolor'] = colors['background']
 fig['layout']['paper_bgcolor'] = colors['background']
 fig['layout']['font'] = {'color':colors['text']}
 
-app.layout = html.Div(style={'backgroundColor': colors['background']}, children=[
+app.layout = html.Div(style={'backgroundColor': colors['background'], 'display': 'inline-block', 'vertical-align': 'middle'}, children=[
     
     html.H1(children='Dota match: {:}'.format(match),
-            style={'color':colors['text']}),
+            style={'color':colors['text'],
+            'textAlign':'center'}),
     html.Div(children="A ward map made with plotly and dash",
-            style={'color':colors['text']}),
+            style={'color':colors['text'],
+            'textAlign':'center'}),
 
     dcc.Graph(id='dota-ward-graph',
-              figure=fig)
+              figure=fig,
+              style={'align':'center'})
     # dcc.Slider(
     #     id='year-slider',
     #     min=df['year'].min(),

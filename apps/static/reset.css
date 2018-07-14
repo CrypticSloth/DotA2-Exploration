@@ -1,1 +1,6 @@
-body { margin: 0; }
+body{
+    /*margin: 0;*/
+    padding: 0;
+    height: 100vh; /*add this to fill the screen*/
+    background: #303059 /*set the background color here*/
+  }
