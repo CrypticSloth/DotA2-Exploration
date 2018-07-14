@@ -322,6 +322,8 @@ app = dash.Dash()
 server=app.server
 
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
+app.css.append_css({'external_url':'/static/reset.css'})
+app.server.static_folder = 'static'
 
 colors = {
     'background': '#303059',

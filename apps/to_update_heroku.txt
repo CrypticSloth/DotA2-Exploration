@@ -1,0 +1,3 @@
+Type in this command to push updates to heroku repo
+
+git subtree push --prefix pythonapp heroku master
