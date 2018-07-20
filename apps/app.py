@@ -332,7 +332,8 @@ marks = {}
 for i in range(9):
     x = i+1
     mark_time = div*x
-    marks[mark_time] = {'label': time.strftime('%M:%S', time.gmtime(int(mark_time)))}   
+    marks[int(mark_time)] = {'label': time.strftime('%M:%S', time.gmtime(mark_time)),
+                             'style': {'color': '#5eff2d'}}   
 
 #########################
 ### Make the dash app ###
@@ -350,6 +351,10 @@ colors = {
     'text': '#FFFFFF'
 }
 
+# colors = {
+# 'background': '#ffffff',
+# 'text': '#000000'
+# }
 app.layout = html.Div(style={'backgroundColor': colors['background'], 'display': 'inline-block', 'vertical-align': 'middle'}, children=[
     
     html.H1(children='Dota match: {:}'.format(match),
@@ -369,7 +374,9 @@ app.layout = html.Div(style={'backgroundColor': colors['background'], 'display':
         max=duration,
         value=[0, duration],
         marks=marks,
-        included=False
+        included=False,
+        # too slow for automatic updates with drag
+        #updatemode='drag'
     ),
     html.Div(id='output-container-range-slider-non-linear', style={'margin-top': 20})
 ])
@@ -676,6 +683,11 @@ def update_figure(slider_input):
     'background': '#303059',
     'text': '#FFFFFF'
     }
+
+    # colors = {
+    # 'background': '#ffffff',
+    # 'text': '#000000'
+    # }
 
     # Update plots colors with theme of dash app
     layout['plot_bgcolor'] = colors['background']
