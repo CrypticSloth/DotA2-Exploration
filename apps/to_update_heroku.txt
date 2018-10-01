@@ -1,3 +1,7 @@
 Type in this command to push updates to heroku repo
 
-git subtree push --prefix pythonapp heroku master
+git subtree push --prefix apps heroku master
+
+We do this because heroku expects the app to be in the root directory. 
+We can use the subtree module to only push the subdirectory to get around this.
+
