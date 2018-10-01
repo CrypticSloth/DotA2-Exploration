@@ -18,3 +18,10 @@ I have made this run every night on my Windows computer using Task Scheduler. I 
 **Analysis**
 
 This folder contains all of my Ad Hoc analysis. I try to keep things as published as possible but this is a constant work in progress so things will sometimes be unfinished/not in a clean or published state.
+
+**Apps**
+
+Currently, I am creating a web application that shows all of the wards that were placed by players throughout a game.
+This app is a work in progress and I am always adding more features to it.
+
+You can check this app out [here](https://dota-ward-map.herokuapp.com/)
