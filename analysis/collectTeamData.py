@@ -21,6 +21,8 @@ def search_matches_for_team(target_team, target_versions, progress_bar = False, 
     
     This function assumes your path looks something like this:
     ../versions_test/dota_versions/data.json
+
+    Make it have two options, one to either return a list of ids of games the target team played in, or return a list of the actual games data
     """
 
     target_matches = defaultdict(list)
@@ -53,6 +55,8 @@ def search_matches_for_team(target_team, target_versions, progress_bar = False, 
                     continue
         return(target_matches)
 
+def collect_data_from_ids(ids):
+    """ Collect data from a list of match ids """
 
 if __name__ == '__main__':
 
