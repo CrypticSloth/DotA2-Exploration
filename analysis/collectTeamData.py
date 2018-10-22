@@ -4,7 +4,7 @@ import os, os.path
 from tqdm import tqdm
 from collections import defaultdict
 
-def search_matches_for_team(target_team, target_versions, , collect_data = False, progress_bar = False, path='../versions_test'):
+def search_matches_for_team(target_team, target_versions, collect_data = True, progress_bar = False, path='../versions_test'):
     """
     Loop through data files and collect only the match IDs that have a certain team in it
     and return a dictionary of lists that contains the matches that the team played under either radiant or dire
@@ -25,7 +25,6 @@ def search_matches_for_team(target_team, target_versions, , collect_data = False
     Make it have two options, one to either return a list of ids of games the target team played in, or return a list of the actual games data
     """
 
-    
     target_matches = defaultdict(list)
     target_data = defaultdict(list)
 
@@ -58,41 +57,38 @@ def search_matches_for_team(target_team, target_versions, , collect_data = False
                         continue
             return(target_data)
 
+    else: 
+        if progress_bar == True:
+            for version in target_versions:
+                for match in tqdm([name for name in os.listdir('{:}/{:}'.format(path, version))],desc="gathering data from version {:}".format(version)):
+                    with open('{:}/{:}/{:}'.format(path, version, match),'r') as outfile:
+                        data = json.load(outfile)
+                    try:
+                        if data['radiant_team']['name'] == target_team: 
+                            target_matches["radiant"].append(match)
+                        if data['dire_team']['name'] == target_team:
+                            target_matches["dire"].append(match)
+                    except:
+                        continue  
+            return(target_matches)
 
-    if progress_bar == True:
-        for version in target_versions:
-            for match in tqdm([name for name in os.listdir('{:}/{:}'.format(path, version))],desc="gathering data from version {:}".format(version)):
-                with open('{:}/{:}/{:}'.format(path, version, match),'r') as outfile:
-                    data = json.load(outfile)
-                try:
-                    if data['radiant_team']['name'] == target_team: 
-                        target_matches["radiant"].append(match)
-                    if data['dire_team']['name'] == target_team:
-                        target_matches["dire"].append(match)
-                except:
-                    continue  
-        return(target_matches)
-
-    if progress_bar == False:
-        for version in target_versions:
-            for match in [name for name in os.listdir('{:}/{:}'.format(path, version))]:
-                with open('{:}/{:}/{:}'.format(path, version, match),'r') as outfile:
-                    data = json.load(outfile)
-                try:
-                    if data['radiant_team']['name'] == target_team: 
-                        target_matches["radiant"].append(match)
-                    if data['dire_team']['name'] == target_team:
-                        target_matches["dire"].append(match)
-                except:
-                    continue
-        return(target_matches)
-
-def collect_data_from_ids(ids):
-    """ Collect data from a list of match ids """
+        if progress_bar == False:
+            for version in target_versions:
+                for match in [name for name in os.listdir('{:}/{:}'.format(path, version))]:
+                    with open('{:}/{:}/{:}'.format(path, version, match),'r') as outfile:
+                        data = json.load(outfile)
+                    try:
+                        if data['radiant_team']['name'] == target_team: 
+                            target_matches["radiant"].append(match)
+                        if data['dire_team']['name'] == target_team:
+                            target_matches["dire"].append(match)
+                    except:
+                        continue
+            return(target_matches)
 
 if __name__ == '__main__':
 
     target_team = "Evil Geniuses"
-    target_versions = ["7.18","7.19"]
+    target_versions = ["7.18"]
     matches = search_matches_for_team(target_team,target_versions,progress_bar=True)
     print(matches)
