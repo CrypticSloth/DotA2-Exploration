@@ -66,7 +66,7 @@ names
 df = pd.DataFrame()
 
 time = []
-for i in motion_data[0]:
+for i in motion_data[2]:
     time.append(i['time'])
 
 df['time'] = time
@@ -74,16 +74,19 @@ for i in range(len(names)):
     x = []
     y = []
     for moment in motion_data[i]:
-        time.append(moment['time'])
         x.append(moment['x'])
         y.append(moment['y'])
+    for pad in range(len(time) - len(x)):
+        x.append(0)
+        y.append(0)
+    print(len(time))
+    print(len(x))
+    print(len(y))
     df['{}_x'.format(names[i])] = x # Each player does not have the same amount of data (find the player with the most data and pad the rest of the players with 0's)
     df['{}_y'.format(names[i])] = y
     df['{}_xy'.format(names[i])] = np.array(x) + np.array(y)
 
 df
-
-
 
 # Plot it ######################
 
