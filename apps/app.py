@@ -18,7 +18,7 @@ import time
 ##############################
 
 match = 3944571593
-with open('{:}.json'.format(match), 'r') as json_file:  
+with open('{:}.json'.format(match), 'r') as json_file:
     data = json.load(json_file)
 
 
@@ -149,7 +149,7 @@ duration = data['duration']
 #             y=obs_wards_dire['{:}_y'.format(i+1)],
 #             name=player_names[i+5],
 #             text=obs_wards_dire['{:}_time'.format(i+1)],
-#             mode='markers', 
+#             mode='markers',
 #             marker = dict(color = "rgb(98, 244, 66)"),
 #                         hoverlabel=dict(
 #                       bgcolor='black',
@@ -175,7 +175,7 @@ duration = data['duration']
 #             y=sen_wards_dire['{:}_y'.format(i+1)],
 #             name=player_names[i+5],
 #             text=sen_wards_dire['{:}_time'.format(i+1)],
-#             mode='markers', 
+#             mode='markers',
 #             marker = dict(color = "rgb(26, 140, 255)"),
 #                         hoverlabel=dict(
 #                       bgcolor='black',
@@ -228,7 +228,7 @@ duration = data['duration']
 #         x1=shapes_obs_x_rad[i] + 10,
 #         y1=shapes_obs_y_rad[i] + 10,
 #         fillcolor='rgba(50, 171, 96, 0.1)',
-#         line=dict(  
+#         line=dict(
 #             color='rgba(50, 171, 96, 1)'
 #         ),
 #     )
@@ -239,12 +239,12 @@ duration = data['duration']
 #         type='circle',
 #         xref='x',
 #         yref='y',
-#         x0=shapes_obs_x_dire[i] - 10, 
-#         y0=shapes_obs_y_dire[i] - 10, 
+#         x0=shapes_obs_x_dire[i] - 10,
+#         y0=shapes_obs_y_dire[i] - 10,
 #         x1=shapes_obs_x_dire[i] + 10,
 #         y1=shapes_obs_y_dire[i] + 10,
 #         fillcolor='rgba(50, 171, 96, 0.1)',
-#         line=dict(  
+#         line=dict(
 #             color='rgba(255, 0, 57,1)'
 #         ),
 #     )
@@ -256,11 +256,11 @@ duration = data['duration']
 #         xref='x',
 #         yref='y',
 #         x0=shapes_sen_x_rad[i] - 5.5, # sent wards have a radius of about 5.5
-#         y0=shapes_sen_y_rad[i] - 5.5, 
+#         y0=shapes_sen_y_rad[i] - 5.5,
 #         x1=shapes_sen_x_rad[i] + 5.5,
 #         y1=shapes_sen_y_rad[i] + 5.5,
 #         fillcolor='rgba(0, 102, 255,0.1)',
-#         line=dict(  
+#         line=dict(
 #             color='rgba(50, 171, 96, 1)'
 #         ),
 #     )
@@ -276,7 +276,7 @@ duration = data['duration']
 #         x1=shapes_sen_x_dire[i] + 5.5,
 #         y1=shapes_sen_y_dire[i] + 5.5,
 #         fillcolor='rgba(0, 102, 255,0.1)',
-#         line=dict(  
+#         line=dict(
 #             color='rgba(255, 0, 57,1)'
 #         ),
 #     )
@@ -333,7 +333,7 @@ for i in range(9):
     x = i+1
     mark_time = div*x
     marks[int(mark_time)] = {'label': time.strftime('%M:%S', time.gmtime(mark_time)),
-                             'style': {'color': '#5eff2d'}}   
+                             'style': {'color': '#5eff2d'}}
 
 #########################
 ### Make the dash app ###
@@ -356,7 +356,7 @@ colors = {
 # 'text': '#000000'
 # }
 app.layout = html.Div(style={'backgroundColor': colors['background'], 'display': 'inline-block', 'vertical-align': 'middle'}, children=[
-    
+
     html.H1(children='Dota match: {:}'.format(match),
             style={'color':colors['text'],
             'textAlign':'center'}),
@@ -385,7 +385,7 @@ app.layout = html.Div(style={'backgroundColor': colors['background'], 'display':
     dash.dependencies.Output('dota-ward-graph', 'figure'),
     [dash.dependencies.Input('time-slider', 'value')])
 def update_figure(slider_input):
-   
+
     # Get player names
     player_names = []
     for i in range(len(data['players'])):
@@ -511,7 +511,7 @@ def update_figure(slider_input):
             y=obs_wards_dire['{:}_y'.format(i+1)],
             name=player_names[i+5],
             text=obs_wards_dire['{:}_time'.format(i+1)],
-            mode='markers', 
+            mode='markers',
             marker = dict(color = "rgb(98, 244, 66)"),
                         hoverlabel=dict(
                     bgcolor='black',
@@ -535,7 +535,7 @@ def update_figure(slider_input):
             y=sen_wards_dire['{:}_y'.format(i+1)],
             name=player_names[i+5],
             text=sen_wards_dire['{:}_time'.format(i+1)],
-            mode='markers', 
+            mode='markers',
             marker = dict(color = "rgb(26, 140, 255)"),
                         hoverlabel=dict(
                     bgcolor='black',
@@ -589,7 +589,7 @@ def update_figure(slider_input):
             x1=shapes_obs_x_rad[i] + 10,
             y1=shapes_obs_y_rad[i] + 10,
             fillcolor='rgba(50, 171, 96, 0.1)',
-            line=dict(  
+            line=dict(
                 color='rgba(50, 171, 96, 1)'
             ),
         )
@@ -600,12 +600,12 @@ def update_figure(slider_input):
             type='circle',
             xref='x',
             yref='y',
-            x0=shapes_obs_x_dire[i] - 10, 
-            y0=shapes_obs_y_dire[i] - 10, 
+            x0=shapes_obs_x_dire[i] - 10,
+            y0=shapes_obs_y_dire[i] - 10,
             x1=shapes_obs_x_dire[i] + 10,
             y1=shapes_obs_y_dire[i] + 10,
             fillcolor='rgba(50, 171, 96, 0.1)',
-            line=dict(  
+            line=dict(
                 color='rgba(255, 0, 57,1)'
             ),
         )
@@ -617,11 +617,11 @@ def update_figure(slider_input):
             xref='x',
             yref='y',
             x0=shapes_sen_x_rad[i] - 5.5, # sent wards have a radius of about 5.5
-            y0=shapes_sen_y_rad[i] - 5.5, 
+            y0=shapes_sen_y_rad[i] - 5.5,
             x1=shapes_sen_x_rad[i] + 5.5,
             y1=shapes_sen_y_rad[i] + 5.5,
             fillcolor='rgba(0, 102, 255,0.1)',
-            line=dict(  
+            line=dict(
                 color='rgba(50, 171, 96, 1)'
             ),
         )
@@ -637,7 +637,7 @@ def update_figure(slider_input):
             x1=shapes_sen_x_dire[i] + 5.5,
             y1=shapes_sen_y_dire[i] + 5.5,
             fillcolor='rgba(0, 102, 255,0.1)',
-            line=dict(  
+            line=dict(
                 color='rgba(255, 0, 57,1)'
             ),
         )
@@ -701,4 +701,4 @@ def update_figure(slider_input):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True,port=9000)
+    app.run_server(debug=True,port=9999)

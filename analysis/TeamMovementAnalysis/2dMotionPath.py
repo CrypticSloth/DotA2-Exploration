@@ -39,7 +39,7 @@ for player_i in range(5):
         now = playerPosition[i]
         next = playerPosition[i+1]
         if (now['time'] != (next['time'] + 1)):
-            for x in range(next['time'] - now['time'] - 1):
+            for x in range(next['t ime'] - now['time'] - 1):
                 playerPosition.append({'time':(now['time'] + add), 'x':now['x'], 'y':now['y']})
                 add += 1
             add = 1
