@@ -1,8 +1,5 @@
 # Loop through data files and collect only the match IDs that have a certain team in it
 
-# I think this is bugged. It is appending two matches into one 'match'
-# 11/1/18
-
 import json
 import os
 from tqdm import tqdm

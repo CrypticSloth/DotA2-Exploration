@@ -21,14 +21,15 @@ matches = search_matches_for_team(target_team, target_versions, progress_bar = T
 # for i in d['players'][0]['eventData']['playerUpdatePositionEvents']:
 #     print(i)
 
-d['players'][0]['eventData']['playerUpdatePositionEvents'])
+# d['players'][0]['eventData']['playerUpdatePositionEvents'])
+
 # Filter out motion data
 motion_data = []
 names = []
 
 for i in range(5):
-    motion_data.append(matches['radiant'][0]['players'][i]['eventData']['playerUpdatePositionEvents'])
-    names.append(matches['radiant'][0]['players'][i]['name'])
+    motion_data.append(matches['radiant'][1]['players'][i]['eventData']['playerUpdatePositionEvents'])
+    names.append(matches['radiant'][1]['players'][i]['name'])
 
 len(matches['radiant'][0]['players'][0]['eventData']['playerUpdatePositionEvents'])
 # matches['radiant'][0]['match_id']
@@ -41,6 +42,7 @@ len(matches['radiant'][0]['players'][0]['eventData']['playerUpdatePositionEvents
 # This also happens when they are dead, the team jumps say 30 seconds when the player dies
 # to fix this, detect whenever the time skips, and then use the most recent motion update coordinates for each missing time
 
+# !!!! If this is run multiple times then it will double the size of the player pos every time
 padded_player_pos = []
 for player_i in range(5):
     playerPosition = matches['radiant'][0]['players'][player_i]['eventData']['playerUpdatePositionEvents']
@@ -70,18 +72,16 @@ padded_player_pos[3][-1]
 padded_player_pos[4][-1]
 
 # Build the data frame
-len(motion_data[0])
-len(motion_data[1])
-len(motion_data[2])
-len(motion_data[3])
-len(motion_data[4])
+lens = [len(motion_data[0]),len(motion_data[1]),len(motion_data[2]),len(motion_data[3]),len(motion_data[4])]
 names
 
 df = pd.DataFrame()
 
 time = []
-for i in motion_data[2]:
+# !!!!! Need to choose the index with the most time
+for i in motion_data[3]:
     time.append(i['time'])
+
 
 df['time'] = time
 for i in range(len(names)):
