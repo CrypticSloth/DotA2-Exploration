@@ -39,7 +39,7 @@ for player_i in range(5):
         now = playerPosition[i]
         next = playerPosition[i+1]
         if (now['time'] != (next['time'] + 1)):
-            for x in range(next['t ime'] - now['time'] - 1):
+            for x in range(next['time'] - now['time'] - 1):
                 playerPosition.append({'time':(now['time'] + add), 'x':now['x'], 'y':now['y']})
                 add += 1
             add = 1
@@ -60,7 +60,11 @@ padded_player_pos[3][-1]
 padded_player_pos[4][-1]
 
 # Build the data frame
+len(motion_data[0])
 len(motion_data[1])
+len(motion_data[2])
+len(motion_data[3])
+len(motion_data[4])
 names
 
 df = pd.DataFrame()
@@ -77,8 +81,8 @@ for i in range(len(names)):
         x.append(moment['x'])
         y.append(moment['y'])
     for pad in range(len(time) - len(x)):
-        x.append(0)
-        y.append(0)
+        x.append(moment['x'])
+        y.append(moment['y'])
     print(len(time))
     print(len(x))
     print(len(y))
@@ -93,46 +97,39 @@ df
 import plotly as py
 import plotly.graph_objs as go
 
-# Create random data with numpy
-import numpy as np
-
-N = 100
-random_x = np.linspace(0, 1, N)
-random_y0 = np.random.randn(N)+5
-random_y1 = np.random.randn(N)
-random_y2 = np.random.randn(N)-5
-
+len(df['{}_xy'.format(names[0])])
 # Create traces
 trace0 = go.Scatter(
-    x = random_x,
-    y = random_y0,
+    x = df['time'],
+    y = df['{}_xy'.format(names[0])],
     mode = 'lines',
-    name = 'lines'
+    name = '{}_xy'.format(names[0])
 )
-trace1 = go.Scatter(
-    x = random_x,
-    y = random_y0,
-    mode = 'lines',
-    name = 'lines'
-)
-trace2 = go.Scatter(
-    x = random_x,
-    y = random_y0,
-    mode = 'lines',
-    name = 'lines'
-)
-trace3 = go.Scatter(
-    x = random_x,
-    y = random_y0,
-    mode = 'lines',
-    name = 'lines'
-)
-trace4 = go.Scatter(
-    x = random_x,
-    y = random_y0,
-    mode = 'lines',
-    name = 'lines'
-)
-data = [trace0, trace1, trace2, trace3, trace4]
+# trace1 = go.Scatter(
+#     x = df['time'],
+#     y = df['{}_xy'.format(names[1])],
+#     mode = 'lines',
+#     name = '{}_xy'.format(names[1])
+# )
+# trace2 = go.Scatter(
+#     x = df['time'],
+#     y = df['{}_xy'.format(names[2])],
+#     mode = 'lines',
+#     name = '{}_xy'.format(names[2])
+# )
+# trace3 = go.Scatter(
+#     x = df['time'],
+#     y = df['{}_xy'.format(names[3])],
+#     mode = 'lines',
+#     name = '{}_xy'.format(names[3])
+# )
+# trace4 = go.Scatter(
+#     x = df['time'],
+#     y = df['{}_xy'.format(names[4])],
+#     mode = 'lines',
+#     name = '{}_xy'.format(names[4])
+# )
+# data = [trace0, trace1, trace2, trace3, trace4]
+data = [trace0]
 
 py.offline.plot(data, filename='line-mode')
