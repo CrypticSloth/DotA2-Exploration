@@ -13,6 +13,15 @@ target_team = "Evil Geniuses"
 target_versions = ["7.18"]
 matches = search_matches_for_team(target_team, target_versions, progress_bar = True, path=data_path)
 
+# import json
+# with open('C:/GitHub/DotA2-Exploration/versions_test/7.18/3967478661.json') as json_data:
+#     d = json.load(json_data)
+#     json_data.close()
+#
+# for i in d['players'][0]['eventData']['playerUpdatePositionEvents']:
+#     print(i)
+
+d['players'][0]['eventData']['playerUpdatePositionEvents'])
 # Filter out motion data
 motion_data = []
 names = []
@@ -21,6 +30,7 @@ for i in range(5):
     motion_data.append(matches['radiant'][0]['players'][i]['eventData']['playerUpdatePositionEvents'])
     names.append(matches['radiant'][0]['players'][i]['name'])
 
+len(matches['radiant'][0]['players'][0]['eventData']['playerUpdatePositionEvents'])
 # matches['radiant'][0]['match_id']
 # sum([x['timeDead'] for x in matches['radiant'][0]['players'][0]['eventData']['deathEvents']])
 # matches['radiant'][0]['players'][0]['eventData']['deathEvents']
