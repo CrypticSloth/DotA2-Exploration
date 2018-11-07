@@ -1,11 +1,10 @@
 # See what we can do with a 2d graph of motion data
-import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from operator import itemgetter
-sys.path.append('C:/GitHub/DotA2-Exploration/analysis')
-from collectTeamData import search_matches_for_team
+from analysis.collectTeamData import search_matches_for_team
+# from collectTeamData import search_matches_for_team
 data_path = 'C:/GitHub/DotA2-Exploration/versions_test/'
 
 # Get data
@@ -115,31 +114,31 @@ trace0 = go.Scatter(
     mode = 'lines',
     name = '{}_xy'.format(names[0])
 )
-# trace1 = go.Scatter(
-#     x = df['time'],
-#     y = df['{}_xy'.format(names[1])],
-#     mode = 'lines',
-#     name = '{}_xy'.format(names[1])
-# )
-# trace2 = go.Scatter(
-#     x = df['time'],
-#     y = df['{}_xy'.format(names[2])],
-#     mode = 'lines',
-#     name = '{}_xy'.format(names[2])
-# )
-# trace3 = go.Scatter(
-#     x = df['time'],
-#     y = df['{}_xy'.format(names[3])],
-#     mode = 'lines',
-#     name = '{}_xy'.format(names[3])
-# )
-# trace4 = go.Scatter(
-#     x = df['time'],
-#     y = df['{}_xy'.format(names[4])],
-#     mode = 'lines',
-#     name = '{}_xy'.format(names[4])
-# )
-# data = [trace0, trace1, trace2, trace3, trace4]
-data = [trace0]
+trace1 = go.Scatter(
+    x = df['time'],
+    y = df['{}_xy'.format(names[1])],
+    mode = 'lines',
+    name = '{}_xy'.format(names[1])
+)
+trace2 = go.Scatter(
+    x = df['time'],
+    y = df['{}_xy'.format(names[2])],
+    mode = 'lines',
+    name = '{}_xy'.format(names[2])
+)
+trace3 = go.Scatter(
+    x = df['time'],
+    y = df['{}_xy'.format(names[3])],
+    mode = 'lines',
+    name = '{}_xy'.format(names[3])
+)
+trace4 = go.Scatter(
+    x = df['time'],
+    y = df['{}_xy'.format(names[4])],
+    mode = 'lines',
+    name = '{}_xy'.format(names[4])
+)
+data = [trace0, trace1, trace2, trace3, trace4]
+# data = [trace0]
 
 py.offline.plot(data, filename='line-mode')
