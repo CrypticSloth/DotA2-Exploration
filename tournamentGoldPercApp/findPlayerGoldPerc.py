@@ -33,14 +33,16 @@ def collect_match_data(ID = 4238597779):
 
     Function will parse a match id for player gold on both sides with player gold percentages at each moment in the game.
     '''
-
+    # ID = 4238597779
     page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(ID))
     games = page.content
 
     match = json.loads(games)
 
     df = pd.DataFrame()
-    match['players'][0]['name']
+    names = []
+    for p in range(10):
+        names.append(match['players'][p]['name'])
     # match['players'][0]['eventData']['playerUpdateGoldEvents']
     time = []
     for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
@@ -58,6 +60,35 @@ def collect_match_data(ID = 4238597779):
                 net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['networth'])
         df['{}_gold'.format(match['players'][p]['name'])] = gold
         df['{}_networth'.format(match['players'][p]['name'])] = net_worth
-        # Add player percentage of net worth to the data frame
+
+    # Add player percentage of net worth to the data frame
+    # For inserting columns: DataFrame.insert(loc, column, value, allow_duplicates=False)
+    # For iterating rows: for index, row in df.iterrows():
+    #                          print row['c1'], row['c2']
+    # Filter column names by df.filter(like="_networth")
+
+    # This is reallllly slow: this needs to be sped up quite a bit!
+
+    for p in range(len(names)):
+        networth_percentage = []
+        for index, row in df.iterrows():
+            rad_team = row[1:11]
+            dire_team = row[11:]
+
+            rad_team_networth = np.sum(rad_team.filter(like="_networth"))
+            dire_team_networth = np.sum(dire_team.filter(like="_networth"))
+
+            if p < 5:
+                perc_networth = rad_team.filter(like="{}_networth".format(names[p])) / rad_team_networth
+                networth_percentage.append(perc_networth[0])
+            else:
+                perc_networth = dire_team.filter(like="{}_networth".format(names[p])) / dire_team_networth
+                networth_percentage.append(perc_networth[0])
+
+        df['{}_networth_percentage'.format(names[p])] = networth_percentage
 
     return df
+
+test = collect_match_data().filter(like="_networth_percentage")
+
+test
