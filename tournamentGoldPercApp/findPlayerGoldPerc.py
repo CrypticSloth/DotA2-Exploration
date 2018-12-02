@@ -13,6 +13,14 @@ import requests
 import numpy as np
 import pandas as pd
 import json
+from tqdm import tqdm
+
+import plotly
+import plotly.plotly as py
+import plotly.graph_objs as go
+from plotly import offline
+offline.init_notebook_mode()
+plotly.offline.init_notebook_mode(connected=True)
 
 def collect_league_data():
     '''
@@ -48,7 +56,9 @@ def collect_match_data(ID = 4238597779):
     for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
         if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
             time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
-    df['time'] = time
+    # Convert time format
+    new_time = ['{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1]) for sec in time]
+    df['time'] = new_time
     len(time)
 
     for p in range(10):
@@ -69,7 +79,7 @@ def collect_match_data(ID = 4238597779):
 
     # This is reallllly slow: this needs to be sped up quite a bit!
 
-    for p in range(len(names)):
+    for p in tqdm(range(len(names))):
         networth_percentage = []
         for index, row in df.iterrows():
             rad_team = row[1:11]
@@ -89,6 +99,91 @@ def collect_match_data(ID = 4238597779):
 
     return df
 
-test = collect_match_data().filter(like="_networth_percentage")
-
+test = collect_match_data()
 test
+seconds = 450
+divmod(seconds, 60)[1]
+test
+
+def create_plots(dataframe, time):
+    '''
+    Create a plotly plot of the player gold percentage of both radiant and dire sides
+    '''
+    dataframe = test
+    time = '10:0'
+
+    df_time = dataframe['time']
+    data = dataframe.filter(like="_networth_percentage")
+    data['time'] = df_time
+
+    time_index = 0
+    for i in range(len(data['time'])):
+        if str(data['time'][i]) == time:
+            time_index = i
+
+    data.iloc[0][0]
+
+    int(data.iloc[time_index][0] * 100)
+
+    data.columns[0].replace('_networth_percentage','')
+
+    # Radiant
+    rad1 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[time_index][0]],
+        name=data.columns[0].replace('_networth_percentage','')
+    )
+    rad2 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[time_index][1]],
+        name=data.columns[1].replace('_networth_percentage','')
+    )
+    rad3 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[time_index][2]],
+        name=data.columns[2].replace('_networth_percentage','')
+    )
+    rad4 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[time_index][3]],
+        name=data.columns[3].replace('_networth_percentage','')
+    )
+    rad5 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[time_index][4]],
+        name=data.columns[4].replace('_networth_percentage','')
+    )
+
+    # Dire
+    dire1 = go.Bar(
+            x=['dire'],
+            y=[data.iloc[time_index][5]],
+            name=data.columns[5].replace('_networth_percentage','')
+    )
+    dire2 = go.Bar(
+            x=['dire'],
+            y=[data.iloc[time_index][6]],
+            name=data.columns[6].replace('_networth_percentage','')
+    )
+    dire3 = go.Bar(
+            x=['dire'],
+            y=[data.iloc[time_index][7]],
+            name=data.columns[7].replace('_networth_percentage','')
+    )
+    dire4 = go.Bar(
+            x=['dire'],
+            y=[data.iloc[time_index][8]],
+            name=data.columns[8].replace('_networth_percentage','')
+    )
+    dire5 = go.Bar(
+            x=['dire'],
+            y=[data.iloc[time_index][9]],
+            name=data.columns[9].replace('_networth_percentage','')
+    )
+    plot_data = [rad1,rad2,rad3,rad4,rad5,dire1,dire2,dire3,dire4,dire5]
+    layout = go.Layout(
+        barmode='stack'
+    )
+
+    fig = go.Figure(data=plot_data, layout=layout)
+    plotly.offline.plot(fig)
