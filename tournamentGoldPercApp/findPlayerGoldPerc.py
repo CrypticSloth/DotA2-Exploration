@@ -41,7 +41,9 @@ def collect_match_data(ID = 4238597779):
 
     Function will parse a match id for player gold on both sides with player gold percentages at each moment in the game.
     '''
-    # ID = 4238597779
+
+
+    ID = 4223661333
     page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(ID))
     games = page.content
 
@@ -50,7 +52,8 @@ def collect_match_data(ID = 4238597779):
     df = pd.DataFrame()
     names = []
     for p in range(10):
-        names.append(match['players'][p]['name'])
+        names.append(match['players'][p]['proPlayerName'])
+        # names.append(match['players'][p]['name'])
     # match['players'][0]['eventData']['playerUpdateGoldEvents']
     time = []
     for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
@@ -68,8 +71,8 @@ def collect_match_data(ID = 4238597779):
             if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] > 0:
                 gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['gold'])
                 net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['networth'])
-        df['{}_gold'.format(match['players'][p]['name'])] = gold
-        df['{}_networth'.format(match['players'][p]['name'])] = net_worth
+        df['{}_gold'.format(match['players'][p]['proPlayerName'])] = gold
+        df['{}_networth'.format(match['players'][p]['proPlayerName'])] = net_worth
 
     # Add player percentage of net worth to the data frame
     # For inserting columns: DataFrame.insert(loc, column, value, allow_duplicates=False)
@@ -78,7 +81,6 @@ def collect_match_data(ID = 4238597779):
     # Filter column names by df.filter(like="_networth")
 
     # This is reallllly slow: this needs to be sped up quite a bit!
-
     for p in tqdm(range(len(names))):
         networth_percentage = []
         for index, row in df.iterrows():
