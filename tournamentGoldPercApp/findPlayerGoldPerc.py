@@ -19,8 +19,8 @@ import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
 from plotly import offline
-offline.init_notebook_mode()
-plotly.offline.init_notebook_mode(connected=True)
+# offline.init_notebook_mode()
+# plotly.offline.init_notebook_mode(connected=True)
 
 def collect_league_data():
     '''
@@ -99,18 +99,18 @@ def collect_match_data(ID = 4238597779):
 
     return df
 
-test = collect_match_data()
-test
-seconds = 450
-divmod(seconds, 60)[1]
-test
+# test = collect_match_data()
+# test
+# seconds = 450
+# divmod(seconds, 60)[1]
+# test
 
 def create_plots(dataframe, time):
     '''
     Create a plotly plot of the player gold percentage of both radiant and dire sides
     '''
-    dataframe = test
-    time = '10:0'
+    # dataframe = test
+    # time = '10:0'
 
     df_time = dataframe['time']
     data = dataframe.filter(like="_networth_percentage")
@@ -187,3 +187,9 @@ def create_plots(dataframe, time):
 
     fig = go.Figure(data=plot_data, layout=layout)
     plotly.offline.plot(fig)
+
+if __name__ == '__main__':
+
+    # Hour long Kuala Lumpuar EG vs NiP
+    # Names are not correct for this match, needs fix
+    create_plots(collect_match_data(4223661333),'10:0')
