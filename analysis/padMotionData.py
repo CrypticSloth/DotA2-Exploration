@@ -127,4 +127,4 @@ if __name__ == '__main__':
 
     matches = putTogether(data)
 
-matches['dire']
+    matches['dire']
