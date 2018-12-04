@@ -23,8 +23,8 @@ server = app.server
 
 app.layout = html.Div([
     html.H2('Players Net Worth Percentage'),
-    dcc.Input(id='input-id', type='number', value= "Match ID",debounce=True),
-    dcc.Input(id='input-time', type='text', value='Time',debounce=True),
+    dcc.Input(id='input-id', type='text', value= "Match ID"),
+    dcc.Input(id='input-time', type='text', value='Time'),
     dcc.Graph(
         id='perc-networth-plot'
         # figure={
@@ -33,12 +33,25 @@ app.layout = html.Div([
     )
 ])
 
+# @app.callback(
+#     Output(component_id='perc-networth-plot',component_property='figure'),
+#     [Input(component_id='input-id',component_property='value'),
+#      Input(component_id='input-time',component_property='value')])
 @app.callback(
     Output(component_id='perc-networth-plot',component_property='figure'),
-    [Input(component_id='input-id',component_property='value'),
-     Input(component_id='input-time',component_property='value')])
-def update_value(value_id,value_time):
-    return create_plots(collect_match_data(value_id),value_time)
+    [Input('input-id', 'n_submit'), Input('input-id', 'n_blur'),
+    Input('input-time', 'n_submit'), Input('input-time', 'n_blur')],
+    [State('input-id', 'value'),
+    State('input-time', 'value')])
+def update_value(ns1, nb1, ns2, nb2, value_id,value_time):
+    if (ns1 == 1) & (ns2 == 1):
+        print("running")
+        return create_plots(collect_match_data(value_id),value_time)
+    # print(ns1)
+    # print(nb1)
+    # print(ns2)
+    # print(nb2)
+    # print('______')
 
 # def display_value(value):
 #     return 'You have selected "{}"'.format(value)
