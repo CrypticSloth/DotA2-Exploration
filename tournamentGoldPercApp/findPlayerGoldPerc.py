@@ -43,7 +43,7 @@ def collect_match_data(ID = 4238597779):
     '''
 
 
-    ID = 4223661333
+    # ID = 4223661333
     page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(ID))
     games = page.content
 
@@ -188,7 +188,8 @@ def create_plots(dataframe, time):
     )
 
     fig = go.Figure(data=plot_data, layout=layout)
-    plotly.offline.plot(fig)
+    # plotly.offline.plot(fig)
+    return fig
 
 if __name__ == '__main__':
 
