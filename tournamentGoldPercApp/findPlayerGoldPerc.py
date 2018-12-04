@@ -81,7 +81,8 @@ def collect_match_data(ID = 4238597779):
     # Filter column names by df.filter(like="_networth")
 
     # This is reallllly slow: this needs to be sped up quite a bit!
-    for p in tqdm(range(len(names))):
+    completed = 0
+    for p in range(len(names)):
         networth_percentage = []
         for index, row in df.iterrows():
             rad_team = row[1:11]
@@ -98,7 +99,8 @@ def collect_match_data(ID = 4238597779):
                 networth_percentage.append(perc_networth[0])
 
         df['{}_networth_percentage'.format(names[p])] = networth_percentage
-
+        completed += 10
+        print("{}% completed".format(completed))
     return df
 
 # test = collect_match_data()
