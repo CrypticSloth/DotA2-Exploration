@@ -25,6 +25,7 @@ app.layout = html.Div([
     html.H2('Players Net Worth Percentage'),
     dcc.Input(id='input-id', type='text', value= "Match ID"),
     dcc.Input(id='input-time', type='text', value='Time'),
+    html.Button('Run', id='button'),
     dcc.Graph(
         id='perc-networth-plot'
         # figure={
@@ -37,16 +38,20 @@ app.layout = html.Div([
 #     Output(component_id='perc-networth-plot',component_property='figure'),
 #     [Input(component_id='input-id',component_property='value'),
 #      Input(component_id='input-time',component_property='value')])
+# @app.callback(
+#     Output(component_id='perc-networth-plot',component_property='figure'),
+#     [Input('input-id', 'n_submit'), Input('input-id', 'n_blur'),
+#     Input('input-time', 'n_submit'), Input('input-time', 'n_blur')],
+#     [State('input-id', 'value'),
+#     State('input-time', 'value')])
 @app.callback(
-    Output(component_id='perc-networth-plot',component_property='figure'),
-    [Input('input-id', 'n_submit'), Input('input-id', 'n_blur'),
-    Input('input-time', 'n_submit'), Input('input-time', 'n_blur')],
-    [State('input-id', 'value'),
-    State('input-time', 'value')])
-def update_value(ns1, nb1, ns2, nb2, value_id,value_time):
-    if (ns1 == 1) & (ns2 == 1):
-        print("running")
-        return create_plots(collect_match_data(value_id),value_time)
+     Output(component_id='perc-networth-plot',component_property='figure'),
+     [Input('button','n_clicks')],
+     [State('input-id', 'value'),
+     State('input-time', 'value')])
+def update_value(n_clicks,value_id,value_time):
+    print("running")
+    return create_plots(collect_match_data(value_id),value_time)
     # print(ns1)
     # print(nb1)
     # print(ns2)
