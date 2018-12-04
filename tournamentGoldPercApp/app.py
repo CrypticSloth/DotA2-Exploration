@@ -2,7 +2,7 @@
 # https://dash.plot.ly/dash-core-components/input
 
 import os
-os.chdir('C:/GitHub/DotA2-Exploration/tournamentGoldPercApp')
+# os.chdir('C:/GitHub/DotA2-Exploration/tournamentGoldPercApp')
 import plotly
 import dash
 import dash_core_components as dcc
