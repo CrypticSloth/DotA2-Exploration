@@ -10,6 +10,10 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from findPlayerGoldPerc import *
 
+# NOTE!
+# App times out, print statements do not fix it
+# Must do something that the app uses
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 # ID = 4247904407
