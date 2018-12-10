@@ -45,7 +45,7 @@ def collect_match_data(ID = 4238597779):
 
     # ID = 4223661333
     page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(ID))
-    games = page.content
+    games = page.content.decode("utf-8")
 
     match = json.loads(games)
 
