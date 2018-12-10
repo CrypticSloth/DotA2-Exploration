@@ -57,7 +57,7 @@ def update_value(n_clicks,value_id,value_time):
     print("running")
     if n_clicks > 0:
 
-    return create_plots(collect_match_data(value_id),value_time)
+        return create_plots(collect_match_data(value_id),value_time)
     # print(ns1)
     # print(nb1)
     # print(ns2)
