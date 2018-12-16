@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 import json
 from tqdm import tqdm
+import time as tm
 
 import plotly
 import plotly.plotly as py
@@ -21,6 +22,17 @@ import plotly.graph_objs as go
 from plotly import offline
 # offline.init_notebook_mode()
 # plotly.offline.init_notebook_mode(connected=True)
+
+
+''' to record time it takes for an operation to run
+
+import time
+
+start_time = time.time()
+end_time = time.time() - start_time
+
+'''
+
 
 def collect_league_data():
     '''
@@ -42,12 +54,15 @@ def collect_match_data(ID = 4238597779):
     Function will parse a match id for player gold on both sides with player gold percentages at each moment in the game.
     '''
 
+    start_time = tm.time()
 
     # ID = 4223661333
+    request_time = tm.time()
     page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(ID))
     games = page.content.decode("utf-8")
 
     match = json.loads(games)
+    print("time to load matches from api: {}".format(tm.time() - request_time))
 
     df = pd.DataFrame()
     names = []
@@ -101,6 +116,7 @@ def collect_match_data(ID = 4238597779):
         df['{}_networth_percentage'.format(names[p])] = networth_percentage
         completed += 10
         print("{}% completed".format(completed))
+    print("Time to run collect_match_data: {}".format(tm.time() - start_time))
     return df
 
 # test = collect_match_data()
@@ -197,4 +213,6 @@ if __name__ == '__main__':
 
     # Hour long Kuala Lumpuar EG vs NiP
     # Names are not correct for this match, needs fix
+    entire_time = tm.time()
     create_plots(collect_match_data(4223661333),'10:0')
+    print("time to run entire operation: {}".format(tm.time() - entire_time))
