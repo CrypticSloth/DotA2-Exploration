@@ -209,6 +209,162 @@ def create_plots(dataframe, time):
     # plotly.offline.plot(fig)
     return fig
 
+
+
+page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(4238597779))
+games = page.content.decode("utf-8")
+match = json.loads(games)
+
+time = []
+for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
+    if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] >= 0:
+        time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+
+sec = 100
+new_time = '{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1])
+new_time
+min,sec = new_time.split(':')
+old_time = (int(min) * 60) + int(sec)
+old_time
+
+time[old_time - 1]
+
+match['players'][0]['eventData']['playerUpdateGoldEvents']
+
+def faster_collect_match_data(ID,time="10:00"):
+
+    start_time = tm.time()
+
+    # ID = 4223661333
+    request_time = tm.time()
+    page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(ID))
+    games = page.content.decode("utf-8")
+
+    match = json.loads(games)
+    print("time to load matches from api: {}".format(tm.time() - request_time))
+
+
+    df = pd.DataFrame()
+
+    # Collect player names
+    names = []
+    for p in range(10):
+        names.append(match['players'][p]['proPlayerName'])
+        # names.append(match['players'][p]['name'])
+    # match['players'][0]['eventData']['playerUpdateGoldEvents']
+    # time = []
+    # for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
+    #     if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
+    #         time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+
+    # Convert time format into an index
+    min,sec = time.split(":")
+    new_time = (int(min)*60) + int(sec)
+    index = new_time - 1
+
+    rad_networths = []
+    dire_networths = []
+    # Grab net_worth for each player at the index given by the input time
+    for p in range(10):
+        net_worth = []
+        if p < 5:
+            rad_networths.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][index]['networth'])
+        else:
+            dire_networths.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][index]['networth'])
+
+    rad_networths
+    dire_networths
+
+    # Compute inividual player networths and return the data as a dataframe
+    rad_tot_networth = sum(rad_networths)
+    dire_tot_networth = sum(dire_networths)
+
+    rad_perc_networths = [x/rad_tot_networth for x in rad_networths]
+    dire_perc_networths = [x/dire_tot_networth for x in dire_networths]
+    all_perc_networths = [rad_perc_networths+dire_perc_networths]
+
+    df = pd.DataFrame(data=all_perc_networths,columns=names)
+    print("Time to run entire function: {}".format(tm.time() - start_time))
+    return df
+
+def create_plots_fast(data):
+    # df_time = dataframe['time']
+    # data = dataframe.filter(like="_networth_percentage")
+    # data['time'] = df_time
+
+    # time_index = 0
+    # for i in range(len(data['time'])):
+    #     if str(data['time'][i]) == time:
+    #         time_index = i
+
+    # data.iloc[0][0]
+
+    # int(data.iloc[time_index][0] * 100)
+
+    # data.columns[0].replace('_networth_percentage','')
+
+    # Radiant
+    rad1 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[0][0]],
+        name=data.columns[0]
+    )
+    rad2 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[0][1]],
+        name=data.columns[1]
+    )
+    rad3 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[0][2]],
+        name=data.columns[2]
+    )
+    rad4 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[0][3]],
+        name=data.columns[3]
+    )
+    rad5 = go.Bar(
+        x=['radiant'],
+        y=[data.iloc[0][4]],
+        name=data.columns[4]
+    )
+
+    # Dire
+    dire1 = go.Bar(
+        x=['dire'],
+        y=[data.iloc[0][5]],
+        name=data.columns[5]
+    )
+    dire2 = go.Bar(
+        x=['dire'],
+        y=[data.iloc[0][6]],
+        name=data.columns[6]
+    )
+    dire3 = go.Bar(
+        x=['dire'],
+        y=[data.iloc[0][7]],
+        name=data.columns[7]
+    )
+    dire4 = go.Bar(
+        x=['dire'],
+        y=[data.iloc[0][8]],
+        name=data.columns[8]
+    )
+    dire5 = go.Bar(
+        x=['dire'],
+        y=[data.iloc[0][9]],
+        name=data.columns[9]
+    )
+    plot_data = [rad1,rad2,rad3,rad4,rad5,dire1,dire2,dire3,dire4,dire5]
+    layout = go.Layout(
+        barmode='stack'
+    )
+
+    fig = go.Figure(data=plot_data, layout=layout)
+    # plotly.offline.plot(fig)
+    return fig
+
 if __name__ == '__main__':
 
     # Hour long Kuala Lumpuar EG vs NiP
@@ -216,3 +372,5 @@ if __name__ == '__main__':
     entire_time = tm.time()
     create_plots(collect_match_data(4223661333),'10:0')
     print("time to run entire operation: {}".format(tm.time() - entire_time))
+
+    create_plots_fast(faster_collect_match_data(4223661333,'10:0'))
