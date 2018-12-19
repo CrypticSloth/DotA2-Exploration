@@ -19,7 +19,7 @@ import time as tm
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
-from plotly import offline
+from plotly.offline import plot,iplot
 # offline.init_notebook_mode()
 # plotly.offline.init_notebook_mode(connected=True)
 
@@ -125,111 +125,127 @@ def collect_match_data(ID = 4238597779):
 # divmod(seconds, 60)[1]
 # test
 
-def create_plots(dataframe, time):
+def plot_perc_networth_overtime(dataframe):
     '''
-    Create a plotly plot of the player gold percentage of both radiant and dire sides
+    Create a plotly plot of the player gold percentage of both radiant and dire sides over the entire game
     '''
-    # dataframe = test
-    # time = '10:0'
+    # dataframe = collect_match_data()
 
     df_time = dataframe['time']
     data = dataframe.filter(like="_networth_percentage")
     data['time'] = df_time
 
-    time_index = 0
-    for i in range(len(data['time'])):
-        if str(data['time'][i]) == time:
-            time_index = i
+    new_time = []
+    old_time = data['time']
+    for time in old_time:
+        min,sec = time.split(":")
+        new = (int(min) * 60) + int(sec)
+        new_time.append(new)
 
-    data.iloc[0][0]
+    data['time'] = new_time
+    list(data.iloc[:,0])
+    # data
+    # time_index = 0
+    # for i in range(len(data['time'])):
+    #     if str(data['time'][i]) == time:
+    #         time_index = i
 
-    int(data.iloc[time_index][0] * 100)
+     # data.iloc[:,0]
 
-    data.columns[0].replace('_networth_percentage','')
+    # int(data.iloc[time_index][0] * 100)
+
+    # data.columns[0].replace('_networth_percentage','')
 
     # Radiant
-    rad1 = go.Bar(
-        x=['radiant'],
-        y=[data.iloc[time_index][0]],
-        name=data.columns[0].replace('_networth_percentage','')
+    rad1 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,0]),
+        name=data.columns[0].replace('_networth_percentage',''),
+        mode='lines'
     )
-    rad2 = go.Bar(
-        x=['radiant'],
-        y=[data.iloc[time_index][1]],
-        name=data.columns[1].replace('_networth_percentage','')
+    rad2 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,1]),
+        name=data.columns[1].replace('_networth_percentage',''),
+        mode='lines'
     )
-    rad3 = go.Bar(
-        x=['radiant'],
-        y=[data.iloc[time_index][2]],
-        name=data.columns[2].replace('_networth_percentage','')
+    rad3 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,2]),
+        name=data.columns[2].replace('_networth_percentage',''),
+        mode='lines'
     )
-    rad4 = go.Bar(
-        x=['radiant'],
-        y=[data.iloc[time_index][3]],
-        name=data.columns[3].replace('_networth_percentage','')
+    rad4 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,3]),
+        name=data.columns[3].replace('_networth_percentage',''),
+        mode='lines'
     )
-    rad5 = go.Bar(
-        x=['radiant'],
-        y=[data.iloc[time_index][4]],
-        name=data.columns[4].replace('_networth_percentage','')
+    rad5 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,4]),
+        name=data.columns[4].replace('_networth_percentage',''),
+        mode='lines'
     )
 
     # Dire
-    dire1 = go.Bar(
-            x=['dire'],
-            y=[data.iloc[time_index][5]],
-            name=data.columns[5].replace('_networth_percentage','')
+    dire1 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,5]),
+        name=data.columns[5].replace('_networth_percentage',''),
+        mode='lines'
     )
-    dire2 = go.Bar(
-            x=['dire'],
-            y=[data.iloc[time_index][6]],
-            name=data.columns[6].replace('_networth_percentage','')
+    dire2 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,6]),
+        name=data.columns[6].replace('_networth_percentage',''),
+        mode='lines'
     )
-    dire3 = go.Bar(
-            x=['dire'],
-            y=[data.iloc[time_index][7]],
-            name=data.columns[7].replace('_networth_percentage','')
+    dire3 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,7]),
+        name=data.columns[7].replace('_networth_percentage',''),
+        mode='lines'
     )
-    dire4 = go.Bar(
-            x=['dire'],
-            y=[data.iloc[time_index][8]],
-            name=data.columns[8].replace('_networth_percentage','')
+    dire4 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,8]),
+        name=data.columns[8].replace('_networth_percentage',''),
+        mode='lines'
     )
-    dire5 = go.Bar(
-            x=['dire'],
-            y=[data.iloc[time_index][9]],
-            name=data.columns[9].replace('_networth_percentage','')
+    dire5 = go.Scatter(
+        x=data['time'],
+        y=list(data.iloc[:,9]),
+        name=data.columns[9].replace('_networth_percentage',''),
+        mode='lines'
     )
     plot_data = [rad1,rad2,rad3,rad4,rad5,dire1,dire2,dire3,dire4,dire5]
-    layout = go.Layout(
-        barmode='stack'
-    )
-
-    fig = go.Figure(data=plot_data, layout=layout)
+    # layout = go.Layout()
+    fig = go.Figure(data=plot_data)
     # plotly.offline.plot(fig)
     return fig
 
 
 
-page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(4238597779))
-games = page.content.decode("utf-8")
-match = json.loads(games)
-
-time = []
-for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
-    if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] >= 0:
-        time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
-
-sec = 100
-new_time = '{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1])
-new_time
-min,sec = new_time.split(':')
-old_time = (int(min) * 60) + int(sec)
-old_time
-
-time[old_time - 1]
-
-match['players'][0]['eventData']['playerUpdateGoldEvents']
+# page = requests.get('https://api.stratz.com/api/v1/match/{:}'.format(4238597779))
+# games = page.content.decode("utf-8")
+# match = json.loads(games)
+#
+# time = []
+# for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
+#     if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] >= 0:
+#         time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+#
+# sec = 100
+# new_time = '{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1])
+# new_time
+# min,sec = new_time.split(':')
+# old_time = (int(min) * 60) + int(sec)
+# old_time
+#
+# time[old_time - 1]
+#
+# match['players'][0]['eventData']['playerUpdateGoldEvents']
 
 def faster_collect_match_data(ID,time="10:00"):
 
@@ -367,10 +383,10 @@ def create_plots_fast(data):
 
 if __name__ == '__main__':
 
-    # Hour long Kuala Lumpuar EG vs NiP
-    # Names are not correct for this match, needs fix
+    # Hour long Kuala Lumpuar EG vs NiP = 4223661333
     entire_time = tm.time()
-    create_plots(collect_match_data(4223661333),'10:0')
+    plot(plot_perc_networth_overtime(collect_match_data(4223661333)))
     print("time to run entire operation: {}".format(tm.time() - entire_time))
 
-    create_plots_fast(faster_collect_match_data(4223661333,'10:0'))
+    # create_plots_fast(faster_collect_match_data(4223661333,'10:0'))
+    # plot(go.Figure(data=[go.Bar(x=[1,2,3],y=[2,3,4])]))
