@@ -135,15 +135,15 @@ def plot_perc_networth_overtime(dataframe):
     data = dataframe.filter(like="_networth_percentage")
     data['time'] = df_time
 
-    new_time = []
-    old_time = data['time']
-    for time in old_time:
-        min,sec = time.split(":")
-        new = (int(min) * 60) + int(sec)
-        new_time.append(new)
-
-    data['time'] = new_time
-    list(data.iloc[:,0])
+    # new_time = []
+    # old_time = data['time']
+    # for time in old_time:
+    #     min,sec = time.split(":")
+    #     new = (int(min) * 60) + int(sec)
+    #     new_time.append(new)
+    #
+    # data['time'] = new_time
+    # list(data.iloc[:,0])
     # data
     # time_index = 0
     # for i in range(len(data['time'])):
