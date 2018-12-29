@@ -122,11 +122,11 @@ def query_submitted(click, value_id, value_time):
         return ''
     else:
         # a query was submitted, so queue it up and return job_id
-        data = collect_match_data(value_id)
+        # data = collect_match_data(value_id)
         q = Queue(connection=conn)
         job_id = str(uuid.uuid4())
-        job = q.enqueue_call(func=plot_perc_networth_overtime,
-                                args=(data),
+        job = q.enqueue_call(func=collect_match_data,
+                                args=(value_id),
                                 timeout='3m',
                                 job_id=job_id)
         return job_id
