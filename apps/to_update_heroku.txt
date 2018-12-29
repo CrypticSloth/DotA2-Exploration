@@ -20,3 +20,5 @@ then you can push it!
 
 If you have multiple apps in the same repo and you want to update a different app run this to target it:
 heroku git:remote -a dota-player-gold
+
+If you are trying to push to a subtree make sure you checkin to the correct branch and then push how you normally would
