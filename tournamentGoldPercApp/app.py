@@ -91,7 +91,7 @@ app.layout = html.Div(children=[
         html.Div(children='', id='dummy-results'),
         dcc.Interval(
             id='update-interval',
-            interval=60*60*5000,  # in milliseconds
+            interval=60 * 60 * 5000,  # in milliseconds
             n_intervals=0
         )
 
@@ -122,11 +122,11 @@ def query_submitted(click, value_id, value_time):
         return ''
     else:
         # a query was submitted, so queue it up and return job_id
-        duration = 20           # pretend the process takes 20 seconds to complete
+        data = collect_match_data(value_id)
         q = Queue(connection=conn)
         job_id = str(uuid.uuid4())
-        job = q.enqueue_call(func=create_plots,
-                                args=(value_id, value_time),
+        job = q.enqueue_call(func=plot_perc_networth_overtime,
+                                args=(data),
                                 timeout='3m',
                                 job_id=job_id)
         return job_id
