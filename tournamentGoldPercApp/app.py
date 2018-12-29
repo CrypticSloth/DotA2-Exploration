@@ -21,8 +21,8 @@ from findPlayerGoldPerc import *
 
 # initialize app
 app = dash.Dash(__name__, static_folder='static')       # config to enable
-app.scripts.config.serve_locally=True                   # things like css to
-app.css.config.serve_locally=True                       # be served locally from /static
+app.scripts.config.serve_locally = True                   # things like css to
+app.css.config.serve_locally = True                       # be served locally from /static
 server = app.server                                     # folder
 
 
@@ -32,13 +32,13 @@ wiley_logo = base64.b64encode(open(os.path.join(static_folder, 'wiley.png'), 'rb
 robot_logo = base64.b64encode(open(os.path.join(static_folder, 'robot.png'), 'rb').read())
 
 # markdown docs for layout
-divider_markdown='''
+divider_markdown = '''
 ***
 '''
-description_markdown='''
+description_markdown = '''
 This is our boilerplate Dash app.
  '''
-query_help_markdown='''
+query_help_markdown = '''
 We often use processes that take a while that would otherwise cause server and browser timeouts.
 This app uses a background worker, automatic refreshing and a spinner to prevent timeouts and
 provide an improved user experience.
@@ -71,7 +71,7 @@ app.layout = html.Div(children=[
     # Submit
     html.Label('Press submit to start a 20 second process:'),
     html.Br(),
-    dcc.Input(id='input-id', type='text', value= "Match ID"),
+    dcc.Input(id='input-id', type='text', value="Match ID"),
     dcc.Input(id='input-time', type='text', value='Time'),
     html.Button(id='submit', type='submit', children='Submit'),
     html.Br(),
@@ -91,7 +91,7 @@ app.layout = html.Div(children=[
         html.Div(children='', id='dummy-results'),
         dcc.Interval(
             id='update-interval',
-            interval=60*60*5000, # in milliseconds
+            interval=60*60*5000,  # in milliseconds
             n_intervals=0
         )
 
@@ -104,9 +104,9 @@ app.layout = html.Div(children=[
             style={'text-align': 'left', 'display': 'inline-block', 'vertical-align': 'middle'}),
     ], style={'display': 'inline-block', 'vertical-align': 'middle'}),
     html.Div(
-    html.Img(id='wiley-logo',
-        src='data:image/png;base64,{}'.format(wiley_logo.decode()),
-        style={'width': '150px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'})
+        html.Img(id='wiley-logo',
+            src='data:image/png;base64,{}'.format(wiley_logo.decode()),
+            style={'width': '150px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'})
 
 ], style={'padding': '10px 10px'})
 
@@ -117,7 +117,7 @@ app.layout = html.Div(children=[
     [dash.dependencies.Input('submit', 'n_clicks')],
     [dash.dependencies.State('input-id', 'value'),
     dash.dependencies.State('input-time', 'value')])
-def query_submitted(click,value_id, value_time):
+def query_submitted(click, value_id, value_time):
     if click == 0 or click is None:
         return ''
     else:
@@ -126,7 +126,7 @@ def query_submitted(click,value_id, value_time):
         q = Queue(connection=conn)
         job_id = str(uuid.uuid4())
         job = q.enqueue_call(func=create_plots,
-                                args=(value_id,value_time),
+                                args=(value_id, value_time),
                                 timeout='3m',
                                 job_id=job_id)
         return job_id
@@ -160,7 +160,6 @@ def update_results_tables(n_intervals, job_id):
         return ''
 
 
-
 # this callback orders the table to be regularly refreshed if
 # the user is waiting for results, or to be static (refreshed once
 # per hour) if they are not.
@@ -182,10 +181,10 @@ def stop_or_start_table_update(job_id, n_intervals):
             return 1000
         else:
             # the results are ready, therefore stop regular refreshing
-            return 60*60*1000
+            return 60 * 60 * 1000
     else:
         # the job does not exist, therefore stop regular refreshing
-        return 60*60*1000
+        return 60 * 60 * 1000
 
 
 # this callback displays a please wait message in the status div if
