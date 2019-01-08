@@ -45,10 +45,10 @@ app.layout = html.Div(children=[
     html.Link(href='/static/load_screen.css', rel='stylesheet'),
 
     # Our team's logo
-    html.Div(
-        html.Img(id='robot-logo',
-            src='data:image/png;base64,{}'.format(robot_logo.decode()),
-            style={'width': '100px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'}),
+    # html.Div(
+    #     html.Img(id='robot-logo',
+    #         src='data:image/png;base64,{}'.format(robot_logo.decode()),
+    #         style={'width': '100px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'}),
 
     # # app name and description
     # html.H1(children='Wiley Boilerplate Dash App'),
@@ -108,13 +108,13 @@ app.layout = html.Div(children=[
     # footer with corporate branding
     dcc.Markdown(children=divider_markdown),
     html.Div([
-        html.Div(children='Put your legal notices, corporate logo or whatever here',
+        html.Div(children='Created by Erik Sorensen - Made with Plotly Dash',
             style={'text-align': 'left', 'display': 'inline-block', 'vertical-align': 'middle'}),
     ], style={'display': 'inline-block', 'vertical-align': 'middle'}),
-    html.Div(
-        html.Img(id='wiley-logo',
-            src='data:image/png;base64,{}'.format(wiley_logo.decode()),
-            style={'width': '150px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'})
+    # html.Div(
+    #     html.Img(id='wiley-logo',
+    #         src='data:image/png;base64,{}'.format(wiley_logo.decode()),
+    #         style={'width': '150px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'})
 
 ], style={'padding': '10px 10px'})
 
