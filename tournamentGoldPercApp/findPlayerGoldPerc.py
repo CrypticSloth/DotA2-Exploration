@@ -131,11 +131,11 @@ def collect_match_data(ID = 4238597779):
 # divmod(seconds, 60)[1]
 # test
 
-def plot_perc_networth_overtime(dataframe):
+def plot_perc_networth_overtime(match_ID):
     '''
     Create a plotly plot of the player gold percentage of both radiant and dire sides over the entire game
     '''
-    # dataframe = collect_match_data()
+    dataframe = collect_match_data(match_ID)
 
     df_time = dataframe['time']
     data = dataframe.filter(like="_networth_percentage")
@@ -391,7 +391,7 @@ if __name__ == '__main__':
 
     # Hour long Kuala Lumpuar EG vs NiP = 4223661333
     entire_time = tm.time()
-    plot(plot_perc_networth_overtime(collect_match_data(4223661333)))
+    plot(plot_perc_networth_overtime(4223661333))
     print("time to run entire operation: {}".format(tm.time() - entire_time))
 
     # create_plots_fast(faster_collect_match_data(4223661333,'10:0'))

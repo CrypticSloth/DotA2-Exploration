@@ -133,8 +133,8 @@ def query_submitted(n_clicks, value_id):
         q = Queue(connection=conn)
         job_id = str(uuid.uuid4())
         job = q.enqueue_call(func=findPlayerGoldPerc.plot_perc_networth_overtime,
-                                args=(findPlayerGoldPerc.collect_match_data(value_id)), # This cannot be a dataframe, needs to be an integer,
-                                timeout='3m',                                           # Need to change the function
+                                args=([value_id]), # Make sure the args are in a list
+                                timeout='3m',
                                 job_id=job_id)
         return job_id
 
