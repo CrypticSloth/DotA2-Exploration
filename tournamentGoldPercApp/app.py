@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import base64
 import os
-import search_engine
+import findPlayerGoldPerc
 import time
 from rq import Queue                    # requires Redis server (see readme)
 from worker import conn                 # worker.py handles the connection to Redis
@@ -50,23 +50,41 @@ app.layout = html.Div(children=[
             src='data:image/png;base64,{}'.format(robot_logo.decode()),
             style={'width': '100px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'}),
 
-    # app name and description
-    html.H1(children='Wiley Boilerplate Dash App'),
-    dcc.Markdown(description_markdown),
-    html.Br(),
+    # # app name and description
+    # html.H1(children='Wiley Boilerplate Dash App'),
+    # dcc.Markdown(description_markdown),
+    # html.Br(),
+    #
+    # # query form and submit button
+    # # help text
+    # dcc.Markdown(query_help_markdown),
+    # html.Br(),
+    #
+    # # Submit
+    # html.Label('Press submit to start a 20 second process:'),
+    # html.Br(),
+    # html.Button(id='submit', type='submit', children='Submit'),
+    # html.Br(),
+    # html.Br(),
 
-    # query form and submit button
-    # help text
-    dcc.Markdown(query_help_markdown),
-    html.Br(),
+    html.H2('Players Net Worth Percentage'),
+    html.H3('Instructions:'),
+    html.Div('Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.'),
+    html.Div('Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.'),
+    html.Div('When you are ready, click RUN! '),
 
-    # Submit
-    html.Label('Press submit to start a 20 second process:'),
-    html.Br(),
-    html.Button(id='submit', type='submit', children='Submit'),
-    html.Br(),
-    html.Br(),
+    dcc.Input(id='input-id', type='text', placeholder="Match ID", value=""),
+    # dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
+    html.Button('Run', id='button_start', type='submit'),
 
+    # html.Div(
+    #     dcc.Graph(id='dummy-results')  # 'perc-networth-plot'
+    #         # figure={
+    #         #     'data': create_plots(collect_match_data(4223661333),'10:0')
+    #         # }
+    # ),
+
+    # html.Div([html.Table(id='my-table')], style={'width': '25%', 'display': 'inline-block', 'padding': '0 20'}),
     # status infomation, e.g. "please wait"
     html.Div(id='status'),
 
@@ -78,10 +96,10 @@ app.layout = html.Div(children=[
     # a query it refreshes regularly until the results are ready
     html.Div([
 
-        html.Div(children='', id='dummy-results'),
+        dcc.Graph(id='dummy-results'),
         dcc.Interval(
             id='update-interval',
-            interval=60*60*5000, # in milliseconds
+            interval=60*60*5000,  # in milliseconds
             n_intervals=0
         )
 
@@ -94,9 +112,9 @@ app.layout = html.Div(children=[
             style={'text-align': 'left', 'display': 'inline-block', 'vertical-align': 'middle'}),
     ], style={'display': 'inline-block', 'vertical-align': 'middle'}),
     html.Div(
-    html.Img(id='wiley-logo',
-        src='data:image/png;base64,{}'.format(wiley_logo.decode()),
-        style={'width': '150px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'})
+        html.Img(id='wiley-logo',
+            src='data:image/png;base64,{}'.format(wiley_logo.decode()),
+            style={'width': '150px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'})
 
 ], style={'padding': '10px 10px'})
 
@@ -104,17 +122,18 @@ app.layout = html.Div(children=[
 # this callback checks submits the query as a new job, returning job_id to the invisible div
 @app.callback(
     dash.dependencies.Output('job-id', 'children'),
-    [dash.dependencies.Input('submit', 'n_clicks')])
-def query_submitted(click):
-    if click == 0 or click is None:
+     # Output(component_id='perc-networth-plot',component_property='figure'),
+     [dash.dependencies.Input('button_start', 'n_clicks')],
+     [dash.dependencies.State('input-id', 'value')])
+def query_submitted(n_clicks, value_id):
+    if n_clicks == 0 or n_clicks is None:
         return ''
     else:
         # a query was submitted, so queue it up and return job_id
-        duration = 20           # pretend the process takes 20 seconds to complete
         q = Queue(connection=conn)
         job_id = str(uuid.uuid4())
-        job = q.enqueue_call(func=search_engine.run_query,
-                                args=(duration, 'Blackburn, Lancs'),
+        job = q.enqueue_call(func=findPlayerGoldPerc.plot_perc_networth_overtime,
+                                args=(findPlayerGoldPerc.collect_match_data(value_id)),
                                 timeout='3m',
                                 job_id=job_id)
         return job_id
@@ -125,7 +144,7 @@ def query_submitted(click):
 # for a short moment, then empty results are returned.  If there is
 # no job, then empty results are returned.
 @app.callback(
-    dash.dependencies.Output('dummy-results', 'children'),
+    dash.dependencies.Output('dummy-results', 'figure'),
     [dash.dependencies.Input('update-interval', 'n_intervals')],
     [dash.dependencies.State('job-id', 'children')])
 def update_results_tables(n_intervals, job_id):
@@ -146,7 +165,6 @@ def update_results_tables(n_intervals, job_id):
     else:
         # no job exists with this id
         return ''
-
 
 
 # this callback orders the table to be regularly refreshed if
