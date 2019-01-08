@@ -9,6 +9,12 @@ The questions i want to be able to ask are like "On NIP who is the player who if
 That one sounds a lot hard
 '''
 
+'''
+Games to test
+
+24:20 - EG vs SVG - Chongqing Major quals: 4247904407
+
+'''
 import requests
 import numpy as np
 import pandas as pd
