@@ -12,8 +12,8 @@ That one sounds a lot hard
 '''
 Games to test
 
-24:20 - EG vs SVG - Chongqing Major quals: 4247904407
-
+24:20 - EG vs SVG - Chongqing Major quals - ID: 4247904407
+EG vs NiP - Kuala Lumpar - ID: 4223661333
 '''
 import requests
 import numpy as np

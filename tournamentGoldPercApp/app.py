@@ -103,7 +103,7 @@ app.layout = html.Div(children=[
             n_intervals=0
         )
 
-    ], id='results'),
+    ], id='results', style={'width':'75%','margin':25,'textAlign':'center'}),
 
     # footer with corporate branding
     dcc.Markdown(children=divider_markdown),
