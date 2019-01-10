@@ -71,6 +71,8 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
     match = json.loads(games)
     print("time to load matches from api: {}".format(tm.time() - request_time))
 
+    # match['players'][3]['eventData']['playerUpdateGoldEvents'] # there is a differing number of indexes before time=0 which causes the bug
+
     df = pd.DataFrame()
     names = []
     for p in range(10):
@@ -79,29 +81,47 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
         except:
             names.append(match['players'][p]['name'])
             continue
-    # match['players'][0]['eventData']['playerUpdateGoldEvents']
+    # match['players'][0]['eventData']['playerUpdateGoldEvents'][100-3]
     time = []
+    counter = 0
     for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
-        if i % zoom_out == 0:
-            if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
-                time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+        # Use a counter to count how many items are time < 0. This counter will be used to offset
+        # the index so that the ones that are below 0 will not be counted and all indexes will start at 0
+        # after the below 0 time indexes are acounted for
+        if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] < 0:
+            counter += 1
+            # print(counter)
+        if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
+            print(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+            if (i-counter+1) % zoom_out == 0:
+                print(match['players'][0]['eventData']['playerUpdateGoldEvents'][i-counter+1]['time'])
+                time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i-counter+1]['time'])
 
+    print(time)
     # Convert time format
     new_time = ['{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1]) for sec in time]
     df['time'] = new_time
-    print(len(time))
+    print("Time:      {}".format(len(time)))
 
     for p in range(10):
+        counter = 0
         gold = []
         net_worth = []
         for x in range(len(match['players'][p]['eventData']['playerUpdateGoldEvents'])):
-            # print(len(match['players'][p]['eventData']['playerUpdateGoldEvents']))
-            if x % zoom_out == 0:
-                if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] > 0:
-                    gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['gold'])
-                    net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['networth'])
-        print(len(gold))
-        print(len(net_worth))
+            # Use a counter to count how many items are time < 0. This counter will be used to offset
+            # the index so that the ones that are below 0 will not be counted and all indexes will start at 0
+            # after the below 0 time indexes are acounted for
+            if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] < 0:
+                counter += 1
+                # print(counter)
+            if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] > 0:
+                # print(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'])
+                if (x-counter+1) % zoom_out == 0:
+                    gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['gold'])
+                    net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['networth'])
+        # print("Tot Len:   {}".format(len(match['players'][p]['eventData']['playerUpdateGoldEvents'])))
+        # print("Gold:      {}".format(len(gold)))
+        # print("Net Worth: {}".format(len(net_worth)))
         df['{}_gold'.format(match['players'][p]['proPlayerName'])] = gold
         df['{}_networth'.format(match['players'][p]['proPlayerName'])] = net_worth
 
@@ -401,7 +421,7 @@ if __name__ == '__main__':
 
     # Hour long Kuala Lumpuar EG vs NiP = 4223661333
     entire_time = tm.time()
-    plot(plot_perc_networth_overtime(4247731728,5))
+    plot(plot_perc_networth_overtime(4223661333,5))
     print("time to run entire operation: {}".format(tm.time() - entire_time))
 
     # create_plots_fast(faster_collect_match_data(4223661333,'10:0'))
