@@ -76,6 +76,7 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
     df = pd.DataFrame()
     names = []
     for p in range(10):
+        # Would like this to work for all games, not just pro games. Needs bug squashing
         try:
             names.append(match['players'][p]['proPlayerName']) # This erros if a proPlayerName does not exist
         except:
