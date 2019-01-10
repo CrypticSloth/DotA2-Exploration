@@ -90,18 +90,14 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
         # after the below 0 time indexes are acounted for
         if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] < 0:
             counter += 1
-            # print(counter)
+
         if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
-            print(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
             if (i-counter+1) % zoom_out == 0:
-                print(match['players'][0]['eventData']['playerUpdateGoldEvents'][i-counter+1]['time'])
                 time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i-counter+1]['time'])
 
-    print(time)
     # Convert time format
     new_time = ['{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1]) for sec in time]
     df['time'] = new_time
-    print("Time:      {}".format(len(time)))
 
     for p in range(10):
         counter = 0
@@ -119,9 +115,6 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
                 if (x-counter+1) % zoom_out == 0:
                     gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['gold'])
                     net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['networth'])
-        # print("Tot Len:   {}".format(len(match['players'][p]['eventData']['playerUpdateGoldEvents'])))
-        # print("Gold:      {}".format(len(gold)))
-        # print("Net Worth: {}".format(len(net_worth)))
         df['{}_gold'.format(match['players'][p]['proPlayerName'])] = gold
         df['{}_networth'.format(match['players'][p]['proPlayerName'])] = net_worth
 
