@@ -18,6 +18,13 @@ app.css.config.serve_locally=True                       # be served locally from
 server = app.server                                     # folder
 
 
+# Load styles
+css_url = 'https://codepen.io/IvanNieto/pen/bRPJyb.css'
+css_bootstrap_url = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'
+app.css.append_css({
+    "external_url": [css_bootstrap_url, css_url],
+})
+
 # get static images (recommended method is to load images as base64 strings)
 static_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
 wiley_logo = base64.b64encode(open(os.path.join(static_folder, 'wiley.png'), 'rb').read())
@@ -107,16 +114,77 @@ app.layout = html.Div(children=[
 
     # footer with corporate branding
     dcc.Markdown(children=divider_markdown),
-    html.Div([
-        html.Div(children='Created by Erik Sorensen - Made with Plotly Dash',
-            style={'text-align': 'left', 'display': 'inline-block', 'vertical-align': 'middle'}),
-    ], style={'display': 'inline-block', 'vertical-align': 'middle'}),
+        # ABOUT ROW
+        html.Div(
+            className='row',
+            children=[
+              html.Div(
+                className='col',
+                children=[
+                  html.P(
+                    'Data extracted from:'
+                  ),
+                  html.A(
+                      'NASA Fireballs open API',
+                      href='https://ssd-api.jpl.nasa.gov/doc/fireball.html'
+                  )
+                ]
+              ),
+              html.Div(
+                className='col',
+                children=[
+                  html.P(
+                    'Code avaliable at:'
+                  ),
+                  html.A(
+                      'BitBucket',
+                      href='https://bitbucket.org/inieto/great-balls-of-fire/'
+                  )
+                ]
+              ),
+              html.Div(
+                className='col',
+                children=[
+                  html.P(
+                    'Made with:'
+                  ),
+                  html.A(
+                      'Dash / Plot.ly',
+                      href='https://plot.ly/dash/'
+                  )
+                ]
+              ),
+              html.Div(
+                className='col',
+                children=[
+                  html.P(
+                    'Developer:'
+                  ),
+                  html.A(
+                      'Ivan Nieto',
+                      href='https://twitter.com/IvanNietoS'
+                  )
+                ]
+              )
+            ]
+        )
+    ],
+    style={
+        'padding': 40
+    }
+)
+    # html.Div([
+    #     html.P("Created by Erik Sorensen - Made with Plotly Dash"),
+    #     html.P("Visit my [Github](https://github.com/SorensenErik)"),
+    #     html.Div(children='Created by Erik Sorensen - Made with Plotly Dash',
+    #         style={'text-align': 'left', 'display': 'inline-block', 'vertical-align': 'middle'}),
+    # ], style={'display': 'inline-block', 'vertical-align': 'middle'}),
     # html.Div(
     #     html.Img(id='wiley-logo',
     #         src='data:image/png;base64,{}'.format(wiley_logo.decode()),
     #         style={'width': '150px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'})
 
-], style={'padding': '10px 10px'})
+# ], style={'padding': '10px 10px'})
 
 
 # this callback checks submits the query as a new job, returning job_id to the invisible div
@@ -133,7 +201,7 @@ def query_submitted(n_clicks, value_id):
         q = Queue(connection=conn)
         job_id = str(uuid.uuid4())
         job = q.enqueue_call(func=findPlayerGoldPerc.plot_perc_networth_overtime,
-                                args=([value_id]), # Make sure the args are in a list
+                                args=([value_id,10]), # Make sure the args are in a list
                                 timeout='3m',
                                 job_id=job_id)
         return job_id

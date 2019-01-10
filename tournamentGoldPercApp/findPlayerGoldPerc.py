@@ -53,11 +53,12 @@ def collect_league_data():
 
     return team_data
 
-def collect_match_data(ID = 4238597779):
+def collect_match_data(ID = 4238597779, zoom_out = 1):
     '''
     Lets start easy and start with getting individual match data per match id
 
     Function will parse a match id for player gold on both sides with player gold percentages at each moment in the game.
+
     '''
 
     start_time = tm.time()
@@ -73,25 +74,34 @@ def collect_match_data(ID = 4238597779):
     df = pd.DataFrame()
     names = []
     for p in range(10):
-        names.append(match['players'][p]['proPlayerName'])
-        # names.append(match['players'][p]['name'])
+        try:
+            names.append(match['players'][p]['proPlayerName']) # This erros if a proPlayerName does not exist
+        except:
+            names.append(match['players'][p]['name'])
+            continue
     # match['players'][0]['eventData']['playerUpdateGoldEvents']
     time = []
     for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
-        if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
-            time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+        if i % zoom_out == 0:
+            if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
+                time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+
     # Convert time format
     new_time = ['{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1]) for sec in time]
     df['time'] = new_time
-    len(time)
+    print(len(time))
 
     for p in range(10):
         gold = []
         net_worth = []
         for x in range(len(match['players'][p]['eventData']['playerUpdateGoldEvents'])):
-            if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] > 0:
-                gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['gold'])
-                net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['networth'])
+            # print(len(match['players'][p]['eventData']['playerUpdateGoldEvents']))
+            if x % zoom_out == 0:
+                if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] > 0:
+                    gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['gold'])
+                    net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['networth'])
+        print(len(gold))
+        print(len(net_worth))
         df['{}_gold'.format(match['players'][p]['proPlayerName'])] = gold
         df['{}_networth'.format(match['players'][p]['proPlayerName'])] = net_worth
 
@@ -131,11 +141,11 @@ def collect_match_data(ID = 4238597779):
 # divmod(seconds, 60)[1]
 # test
 
-def plot_perc_networth_overtime(match_ID):
+def plot_perc_networth_overtime(match_ID, zoom_out = 1):
     '''
     Create a plotly plot of the player gold percentage of both radiant and dire sides over the entire game
     '''
-    dataframe = collect_match_data(match_ID)
+    dataframe = collect_match_data(match_ID, zoom_out)
 
     df_time = dataframe['time']
     data = dataframe.filter(like="_networth_percentage")
@@ -391,7 +401,7 @@ if __name__ == '__main__':
 
     # Hour long Kuala Lumpuar EG vs NiP = 4223661333
     entire_time = tm.time()
-    plot(plot_perc_networth_overtime(4223661333))
+    plot(plot_perc_networth_overtime(4247731728,5))
     print("time to run entire operation: {}".format(tm.time() - entire_time))
 
     # create_plots_fast(faster_collect_match_data(4223661333,'10:0'))
