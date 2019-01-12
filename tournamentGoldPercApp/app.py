@@ -12,23 +12,23 @@ import uuid
 
 
 # initialize app
-app = dash.Dash(__name__, static_folder='static')       # config to enable
+app = dash.Dash(__name__)       # config to enable
 app.scripts.config.serve_locally=True                   # things like css to
 app.css.config.serve_locally=True                       # be served locally from /static
 server = app.server                                     # folder
 
 
 # Load styles
-css_url = 'https://codepen.io/IvanNieto/pen/bRPJyb.css'
-css_bootstrap_url = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'
-app.css.append_css({
-    "external_url": [css_bootstrap_url, css_url],
-})
+# css_url = 'https://codepen.io/IvanNieto/pen/bRPJyb.css'
+# css_bootstrap_url = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'
+# app.css.append_css({
+#     "external_url": [css_bootstrap_url, css_url],
+# })
 
 # get static images (recommended method is to load images as base64 strings)
-static_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
-wiley_logo = base64.b64encode(open(os.path.join(static_folder, 'wiley.png'), 'rb').read())
-robot_logo = base64.b64encode(open(os.path.join(static_folder, 'robot.png'), 'rb').read())
+static_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'assets')
+# wiley_logo = base64.b64encode(open(os.path.join(static_folder, 'wiley.png'), 'rb').read())
+# robot_logo = base64.b64encode(open(os.path.join(static_folder, 'robot.png'), 'rb').read())
 
 # markdown docs for layout
 divider_markdown='''
@@ -48,8 +48,10 @@ app.layout = html.Div(children=[
 
     # load stylesheets locally since they don't fetch from remote
     # locations when app is running on Heroku
-    html.Link(href='/static/codepen.css', rel='stylesheet'),
-    html.Link(href='/static/load_screen.css', rel='stylesheet'),
+    html.Link(href='/assets/bootstrap.min.css',rel='stylesheet'),
+    html.Link(href='/assets/codepen.css', rel='stylesheet'),
+    html.Link(href='/assets/load_screen.css', rel='stylesheet'),
+    html.Link(href='/assets/my_styles.css',rel='stylesheet'),
 
     # Our team's logo
     # html.Div(
@@ -112,7 +114,7 @@ app.layout = html.Div(children=[
 
     ], id='results', style={'width':'75%','margin':25,'textAlign':'center'}),
 
-    # footer with corporate branding
+    # footer
     dcc.Markdown(children=divider_markdown),
         # ABOUT ROW
         html.Div(
@@ -125,8 +127,8 @@ app.layout = html.Div(children=[
                     'Data extracted from:'
                   ),
                   html.A(
-                      'NASA Fireballs open API',
-                      href='https://ssd-api.jpl.nasa.gov/doc/fireball.html'
+                      'Stratz API',
+                      href='https://stratz.com/'
                   )
                 ]
               ),
@@ -137,8 +139,8 @@ app.layout = html.Div(children=[
                     'Code avaliable at:'
                   ),
                   html.A(
-                      'BitBucket',
-                      href='https://bitbucket.org/inieto/great-balls-of-fire/'
+                      'Github',
+                      href='https://github.com/SorensenErik/DotA2-Exploration/tree/master/tournamentGoldPercApp'
                   )
                 ]
               ),
@@ -161,13 +163,13 @@ app.layout = html.Div(children=[
                     'Developer:'
                   ),
                   html.A(
-                      'Ivan Nieto',
-                      href='https://twitter.com/IvanNietoS'
+                      'Erik Sorensen',
+                      href='https://www.linkedin.com/in/erik-sorensen/'
                   )
                 ]
               )
             ]
-        )
+        ),
     ],
     style={
         'padding': 40
