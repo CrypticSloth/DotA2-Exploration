@@ -14,6 +14,7 @@ Games to test
 
 24:20 - EG vs SVG - Chongqing Major quals - ID: 4247904407
 EG vs NiP - Kuala Lumpar - ID: 4223661333
+Normal pub game : 4238597770
 '''
 import requests
 import numpy as np
@@ -82,6 +83,9 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
         except:
             names.append(match['players'][p]['name'])
             continue
+
+    print(names)
+
     # match['players'][0]['eventData']['playerUpdateGoldEvents'][100-3]
     time = []
     counter = 0
@@ -116,8 +120,8 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
                 if (x-counter+1) % zoom_out == 0:
                     gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['gold'])
                     net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['networth'])
-        df['{}_gold'.format(match['players'][p]['proPlayerName'])] = gold
-        df['{}_networth'.format(match['players'][p]['proPlayerName'])] = net_worth
+        df['{}_gold'.format(names[p])] = gold
+        df['{}_networth'.format(names[p])] = net_worth
 
     # Add player percentage of net worth to the data frame
     # For inserting columns: DataFrame.insert(loc, column, value, allow_duplicates=False)
@@ -413,9 +417,11 @@ def create_plots_fast(data):
 
 if __name__ == '__main__':
 
-    # Hour long Kuala Lumpuar EG vs NiP = 4223661333
+    # 24:20 - EG vs SVG - Chongqing Major quals - ID: 4247904407
+    # EG vs NiP - Kuala Lumpar - ID: 4223661333
+    # Normal pub game : 4238597770
     entire_time = tm.time()
-    plot(plot_perc_networth_overtime(4223661333,5))
+    plot(plot_perc_networth_overtime(4238597770,5))
     print("time to run entire operation: {}".format(tm.time() - entire_time))
 
     # create_plots_fast(faster_collect_match_data(4223661333,'10:0'))
