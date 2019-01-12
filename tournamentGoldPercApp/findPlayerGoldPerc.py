@@ -299,8 +299,11 @@ def faster_collect_match_data(ID,time="10:00"):
     # Collect player names
     names = []
     for p in range(10):
-        names.append(match['players'][p]['proPlayerName'])
-        # names.append(match['players'][p]['name'])
+        try:
+            names.append(match['players'][p]['proPlayerName'])
+        except:
+            names.append(match['players'][p]['name'])
+            continue
     # match['players'][0]['eventData']['playerUpdateGoldEvents']
     # time = []
     # for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
@@ -420,9 +423,10 @@ if __name__ == '__main__':
     # 24:20 - EG vs SVG - Chongqing Major quals - ID: 4247904407
     # EG vs NiP - Kuala Lumpar - ID: 4223661333
     # Normal pub game : 4238597770
+    
     entire_time = tm.time()
     plot(plot_perc_networth_overtime(4238597770,5))
     print("time to run entire operation: {}".format(tm.time() - entire_time))
 
-    # create_plots_fast(faster_collect_match_data(4223661333,'10:0'))
+    plot(create_plots_fast(faster_collect_match_data(4238597770,'10:0')))
     # plot(go.Figure(data=[go.Bar(x=[1,2,3],y=[2,3,4])]))
