@@ -1,0 +1,4 @@
+/* this removes the dash redo button */
+._dash-undo-redo {
+    display: none;
+}
