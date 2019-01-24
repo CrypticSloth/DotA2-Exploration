@@ -6,16 +6,17 @@ import numpy as np
 import json
 from pathlib import Path
 from datetime import datetime
-import sys 
+import sys
 from current_dota_version import current_dota_version
 import time
 
-path = '../versions_test'
+# path = '../versions_test'
+path = 'D:/DataSets/versions_test'
 current_time = datetime.now().strftime('%m/%d/%Y %H:%M')
 
 ##### There should be a different file that checks the current version of dota #######
 # Current version of dota right now
-game_version = current_dota_version() #version grabbed from dota2.gamepedia.com/GameVersion 
+game_version = current_dota_version() #version grabbed from dota2.gamepedia.com/GameVersion
 
 # Check to see if the version path exists. If it doesnt, create a new version path and work in that directory
 version_path = Path('{:}/{:}'.format(path, game_version))
@@ -72,7 +73,7 @@ def Parser():
 		except:
 			print("Error loading eventData for match: {:}".format(str(match)))
 			continue
-		
+
 		# Load in match event data
 		try:
 			data['eventData'] = stratz_details['eventData']
