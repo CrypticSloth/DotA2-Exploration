@@ -45,9 +45,13 @@ app.layout = html.Div(children=[
 
     html.H2('Players Net Worth Percentage'),
     html.H3('Instructions:'),
-    html.Div('Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.'),
-    html.Div('Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.'),
-    html.Div('When you are ready, click RUN! '),
+    html.P(children=[
+        'Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.',
+        html.Br(),
+        'Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.',
+        html.Br(),
+        'When you are ready, click RUN!'
+    ]),
 
     dcc.Input(id='input-id', type='text', placeholder="Match ID", value=""),
     # dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
