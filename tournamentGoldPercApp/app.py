@@ -43,8 +43,8 @@ app.layout = html.Div(children=[
     html.Link(href='/assets/load_screen.css', rel='stylesheet'),
     html.Link(href='/assets/my_styles.css',rel='stylesheet'),
 
-    html.H2('Players Net Worth Percentage'),
-    html.H3('Instructions:'),
+    html.H1('Players Net Worth Percentage'),
+    html.H2('Instructions:'),
     html.P(children=[
         'Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.',
         html.Br(),
