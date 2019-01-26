@@ -6,7 +6,7 @@ import base64
 import os
 import findPlayerGoldPerc
 import time
-from rq import Queue                    # requires Redis server (see readme)
+from rq import Queue                    # requires Redis server
 from worker import conn                 # worker.py handles the connection to Redis
 import uuid
 
@@ -14,16 +14,8 @@ import uuid
 # initialize app
 app = dash.Dash(__name__)       # config to enable
 app.scripts.config.serve_locally=True                   # things like css to
-app.css.config.serve_locally=True                       # be served locally from /static
+app.css.config.serve_locally=True                       # be served locally from /assets
 server = app.server                                     # folder
-
-
-# Load styles
-# css_url = 'https://codepen.io/IvanNieto/pen/bRPJyb.css'
-# css_bootstrap_url = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'
-# app.css.append_css({
-#     "external_url": [css_bootstrap_url, css_url],
-# })
 
 # get static images (recommended method is to load images as base64 strings)
 static_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'assets')
@@ -34,9 +26,7 @@ static_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'asset
 divider_markdown='''
 ***
 '''
-description_markdown='''
-This is our boilerplate Dash app.
- '''
+
 query_help_markdown='''
 We often use processes that take a while that would otherwise cause server and browser timeouts.
 This app uses a background worker, automatic refreshing and a spinner to prevent timeouts and
@@ -53,29 +43,6 @@ app.layout = html.Div(children=[
     html.Link(href='/assets/load_screen.css', rel='stylesheet'),
     html.Link(href='/assets/my_styles.css',rel='stylesheet'),
 
-    # Our team's logo
-    # html.Div(
-    #     html.Img(id='robot-logo',
-    #         src='data:image/png;base64,{}'.format(robot_logo.decode()),
-    #         style={'width': '100px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'}),
-
-    # # app name and description
-    # html.H1(children='Wiley Boilerplate Dash App'),
-    # dcc.Markdown(description_markdown),
-    # html.Br(),
-    #
-    # # query form and submit button
-    # # help text
-    # dcc.Markdown(query_help_markdown),
-    # html.Br(),
-    #
-    # # Submit
-    # html.Label('Press submit to start a 20 second process:'),
-    # html.Br(),
-    # html.Button(id='submit', type='submit', children='Submit'),
-    # html.Br(),
-    # html.Br(),
-
     html.H2('Players Net Worth Percentage'),
     html.H3('Instructions:'),
     html.Div('Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.'),
@@ -86,14 +53,6 @@ app.layout = html.Div(children=[
     # dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
     html.Button('Run', id='button_start', type='submit'),
 
-    # html.Div(
-    #     dcc.Graph(id='dummy-results')  # 'perc-networth-plot'
-    #         # figure={
-    #         #     'data': create_plots(collect_match_data(4223661333),'10:0')
-    #         # }
-    # ),
-
-    # html.Div([html.Table(id='my-table')], style={'width': '25%', 'display': 'inline-block', 'padding': '0 20'}),
     # status infomation, e.g. "please wait"
     html.Div(id='status'),
 
@@ -175,19 +134,6 @@ app.layout = html.Div(children=[
         'padding': 40
     }
 )
-    # html.Div([
-    #     html.P("Created by Erik Sorensen - Made with Plotly Dash"),
-    #     html.P("Visit my [Github](https://github.com/SorensenErik)"),
-    #     html.Div(children='Created by Erik Sorensen - Made with Plotly Dash',
-    #         style={'text-align': 'left', 'display': 'inline-block', 'vertical-align': 'middle'}),
-    # ], style={'display': 'inline-block', 'vertical-align': 'middle'}),
-    # html.Div(
-    #     html.Img(id='wiley-logo',
-    #         src='data:image/png;base64,{}'.format(wiley_logo.decode()),
-    #         style={'width': '150px'}), style={'display': 'inline', 'float': 'right', 'vertical-align': 'middle'})
-
-# ], style={'padding': '10px 10px'})
-
 
 # this callback checks submits the query as a new job, returning job_id to the invisible div
 @app.callback(
