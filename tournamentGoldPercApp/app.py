@@ -53,7 +53,7 @@ app.layout = html.Div(children=[
         'When you are ready, click RUN!'
     ]),
 
-    dcc.Input(id='input-id', type='text', placeholder="Match ID", value=""),
+    dcc.Input(id='input-id-large', type='text', placeholder="Match ID", value=""),
     # dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
     html.Button('Run', id='button_start', type='submit'),
 
@@ -144,7 +144,7 @@ app.layout = html.Div(children=[
     dash.dependencies.Output('job-id', 'children'),
      # Output(component_id='perc-networth-plot',component_property='figure'),
      [dash.dependencies.Input('button_start', 'n_clicks')],
-     [dash.dependencies.State('input-id', 'value')])
+     [dash.dependencies.State('input-id-large', 'value')])
 def query_submitted(n_clicks, value_id):
     if n_clicks == 0 or n_clicks is None:
         return ''
