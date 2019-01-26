@@ -2,6 +2,7 @@ import dash
 import dash_auth
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output, State
 import base64
 import os
 import findPlayerGoldPerc
@@ -10,6 +11,16 @@ from rq import Queue                    # requires Redis server
 from worker import conn                 # worker.py handles the connection to Redis
 import uuid
 
+def generate_table(dataframe, max_rows=1):
+    return html.Table(
+        # Header
+        [html.Tr([html.Th(col) for col in dataframe.columns])] +
+
+        # Body
+        [html.Tr([
+            html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
+        ]) for i in range(len(dataframe))]
+    )
 
 # initialize app
 app = dash.Dash(__name__)       # config to enable
@@ -43,39 +54,63 @@ app.layout = html.Div(children=[
     html.Link(href='/assets/load_screen.css', rel='stylesheet'),
     html.Link(href='/assets/my_styles.css',rel='stylesheet'),
 
-    html.H1('Players Net Worth Percentage'),
-    html.H2('Instructions:'),
-    html.P(children=[
-        'Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.',
-        html.Br(),
-        'Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.',
-        html.Br(),
-        'When you are ready, click RUN!'
+    html.H1('Dota Apps'),
+
+    # Small Applet
+    html.Div([
+        html.H2('Players Net Worth Percentage (Small)'),
+        html.H3('Instructions:'),
+        html.Div('Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.'),
+        html.Div('Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.'),
+        html.Div('When you are ready, click RUN! '),
+        dcc.Input(id='input-id', type='text', placeholder="Match ID",value= ""),
+        dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
+        html.Button('Run', id='button'),
+        dcc.Graph(
+            id='perc-networth-plot'
+            # figure={
+            #     'data': create_plots(collect_match_data(4223661333),'10:0')
+            # }
+        ),
+        html.Div([html.Table(id='my-table')], style={'width': '25%','display': 'inline-block', 'padding': '0 20'})
     ]),
 
-    dcc.Input(id='input-id-large', type='text', placeholder="Match ID", value=""),
-    # dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
-    html.Button('Run', id='button_start', type='submit'),
-
-    # status infomation, e.g. "please wait"
-    html.Div(id='status'),
-
-    # invisible div to safely store the current job-id
-    html.Div(id='job-id', style={'display': 'none'}),
-
-    # this div is the target of the refresh during querying
-    # initially there is no refresh (interval=1 hour) but during
-    # a query it refreshes regularly until the results are ready
+    # Large Applet
     html.Div([
+        html.H2('Player Network Percentage (Large)'),
+        html.H3('Instructions:'),
+        html.P(children=[
+            'Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.',
+            html.Br(),
+            'Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.',
+            html.Br(),
+            'When you are ready, click RUN!'
+        ]),
 
-        dcc.Graph(id='dummy-results'),
-        dcc.Interval(
-            id='update-interval',
-            interval=60*60*5000,  # in milliseconds
-            n_intervals=0
-        )
+        dcc.Input(id='input-id-large', type='text', placeholder="Match ID", value=""),
+        # dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
+        html.Button('Run', id='button_start', type='submit'),
 
-    ], id='results', style={'width':'75%','margin':25,'textAlign':'center'}),
+        # status infomation, e.g. "please wait"
+        html.Div(id='status'),
+
+        # invisible div to safely store the current job-id
+        html.Div(id='job-id', style={'display': 'none'}),
+
+        # this div is the target of the refresh during querying
+        # initially there is no refresh (interval=1 hour) but during
+        # a query it refreshes regularly until the results are ready
+        html.Div([
+
+            dcc.Graph(id='dummy-results'),
+            dcc.Interval(
+                id='update-interval',
+                interval=60*60*5000,  # in milliseconds
+                n_intervals=0
+            )
+
+        ], id='results', style={'width':'75%','margin':25,'textAlign':'center'}),
+    ]),
 
     # footer
     dcc.Markdown(children=divider_markdown),
@@ -139,12 +174,37 @@ app.layout = html.Div(children=[
     }
 )
 
+# Callback for updating the output graph
+@app.callback(
+     Output(component_id='perc-networth-plot',component_property='figure'),
+     [Input('button','n_clicks')],
+     [State('input-id', 'value'),
+     State('input-time', 'value')])
+def update_value(n_clicks,value_id,value_time):
+    print("running")
+    if n_clicks > 0:
+        df = findPlayerGoldPerc.faster_collect_match_data(value_id,value_time)
+
+        return findPlayerGoldPerc.create_plots_fast(df)
+
+# Callbacks for the small applet's table
+@app.callback(
+         Output(component_id='my-table',component_property='children'),
+     [Input('button','n_clicks')],
+     [State('input-id', 'value'),
+     State('input-time', 'value')])
+def update_value(n_clicks,value_id,value_time):
+    print("running table")
+    if n_clicks > 0:
+        df = findPlayerGoldPerc.faster_collect_match_data(value_id,value_time)
+        return generate_table(df)
+
 # this callback checks submits the query as a new job, returning job_id to the invisible div
 @app.callback(
-    dash.dependencies.Output('job-id', 'children'),
+    Output('job-id', 'children'),
      # Output(component_id='perc-networth-plot',component_property='figure'),
-     [dash.dependencies.Input('button_start', 'n_clicks')],
-     [dash.dependencies.State('input-id-large', 'value')])
+     [Input('button_start', 'n_clicks')],
+     [State('input-id-large', 'value')])
 def query_submitted(n_clicks, value_id):
     if n_clicks == 0 or n_clicks is None:
         return ''
@@ -164,9 +224,9 @@ def query_submitted(n_clicks, value_id):
 # for a short moment, then empty results are returned.  If there is
 # no job, then empty results are returned.
 @app.callback(
-    dash.dependencies.Output('dummy-results', 'figure'),
-    [dash.dependencies.Input('update-interval', 'n_intervals')],
-    [dash.dependencies.State('job-id', 'children')])
+    Output('dummy-results', 'figure'),
+    [Input('update-interval', 'n_intervals')],
+    [State('job-id', 'children')])
 def update_results_tables(n_intervals, job_id):
     q = Queue(connection=conn)
     job = q.fetch_job(job_id)
@@ -191,9 +251,9 @@ def update_results_tables(n_intervals, job_id):
 # the user is waiting for results, or to be static (refreshed once
 # per hour) if they are not.
 @app.callback(
-    dash.dependencies.Output('update-interval', 'interval'),
-    [dash.dependencies.Input('job-id', 'children'),
-    dash.dependencies.Input('update-interval', 'n_intervals')])
+    Output('update-interval', 'interval'),
+    [Input('job-id', 'children'),
+    Input('update-interval', 'n_intervals')])
 def stop_or_start_table_update(job_id, n_intervals):
     q = Queue(connection=conn)
     job = q.fetch_job(job_id)
@@ -217,9 +277,9 @@ def stop_or_start_table_update(job_id, n_intervals):
 # this callback displays a please wait message in the status div if
 # the user is waiting for results, or nothing if they are not.
 @app.callback(
-    dash.dependencies.Output('status', 'children'),
-    [dash.dependencies.Input('job-id', 'children'),
-    dash.dependencies.Input('update-interval', 'n_intervals')])
+    Output('status', 'children'),
+    [Input('job-id', 'children'),
+    Input('update-interval', 'n_intervals')])
 def stop_or_start_table_update(job_id, n_intervals):
     q = Queue(connection=conn)
     job = q.fetch_job(job_id)
