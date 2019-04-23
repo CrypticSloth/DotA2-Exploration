@@ -6,15 +6,15 @@ import numpy as np
 import json
 from pathlib import Path
 from datetime import datetime
-import sys 
+import sys
 from current_dota_version import current_dota_version
 import time
 
-path = '../versions'
+path = 'D:/DataSets/versions'
 current_time = datetime.now().strftime('%m/%d/%Y %H:%M')
 
 # Current version of dota right now
-game_version = current_dota_version() #version grabbed from dota2.gamepedia.com/GameVersion 
+game_version = current_dota_version() #version grabbed from dota2.gamepedia.com/GameVersion
 
 # Check to see if the version path exists. If it doesnt, create a new version path and work in that directory
 version_path = Path('{:}/{:}'.format(path, game_version))
