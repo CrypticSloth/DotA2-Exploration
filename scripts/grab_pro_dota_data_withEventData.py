@@ -11,7 +11,7 @@ from current_dota_version import current_dota_version
 import time
 
 # path = '../versions_test'
-path = 'D:/DataSets/versions_test'
+path = 'F:/DataSets/versions_test'
 current_time = datetime.now().strftime('%m/%d/%Y %H:%M')
 
 ##### There should be a different file that checks the current version of dota #######
