@@ -11,7 +11,7 @@ from current_dota_version import current_dota_version
 import time
 
 # path = '../versions_test'
-path = 'F:/DataSets/versions_test'
+path = 'E:/DataSets/versions_test'
 current_time = datetime.now().strftime('%m/%d/%Y %H:%M')
 
 ##### There should be a different file that checks the current version of dota #######
@@ -52,7 +52,13 @@ def Parser():
 		with open('{:}/{:}/{:}.json'.format(path, game_version, match),'r') as outfile:
 			data = json.load(outfile)
 		# Add the information that we want to the file
-		data['pro_team_data'] = {'match_id':proMatches[counter]['match_id'],'radiant_team_id':proMatches[counter]['radiant_team_id'],'radiant_name':proMatches[counter]['radiant_name'],'dire_team_id':proMatches[counter]['dire_team_id'],'dire_name':proMatches[counter]['dire_name'],'league_id':proMatches[counter]['leagueid'],'league_name':proMatches[counter]['league_name']}
+		data['pro_team_data'] = {'match_id':proMatches[counter]['match_id'],
+                                'radiant_team_id':proMatches[counter]['radiant_team_id'],
+                                'radiant_name':proMatches[counter]['radiant_name'],
+                                'dire_team_id':proMatches[counter]['dire_team_id'],
+                                'dire_name':proMatches[counter]['dire_name'],
+                                'league_id':proMatches[counter]['leagueid'],
+                                'league_name':proMatches[counter]['league_name']}
 		data['date_collected'] = current_time
 		counter += 1
 
