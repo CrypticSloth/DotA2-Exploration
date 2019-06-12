@@ -14,6 +14,11 @@ from findPlayerGoldPerc import *
 # App times out, print statements do not fix it
 # Must do something that the app uses
 
+# markdown docs for layout
+divider_markdown='''
+***
+'''
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 def generate_table(dataframe, max_rows=1):
@@ -42,8 +47,8 @@ app.layout = html.Div([
     html.Div('Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.'),
     html.Div('Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.'),
     html.Div('When you are ready, click RUN! '),
-    dcc.Input(id='input-id', type='text', placeholder="Match ID",value= ""),
-    dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
+    dcc.Input(id='input-id', type='text', placeholder="Match ID",value= "4223661333"),
+    dcc.Input(id='input-time', type='text', placeholder='Time',value='10:30'),
     html.Button('Run', id='button'),
     dcc.Graph(
         id='perc-networth-plot'
@@ -51,8 +56,107 @@ app.layout = html.Div([
         #     'data': create_plots(collect_match_data(4223661333),'10:0')
         # }
     ),
-    html.Div([html.Table(id='my-table')], style={'width': '25%','display': 'inline-block', 'padding': '0 20'})
-])
+    html.Div([html.Table(id='my-table')], style={'width': '25%','display': 'inline-block', 'padding': '0 20'}),
+
+    # Large Applet
+    html.Div([
+        html.H2('Player Network Percentage (Large)'),
+        html.H3('Instructions:'),
+        html.P(children=[
+            'Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.',
+            html.Br(),
+            'Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.',
+            html.Br(),
+            'When you are ready, click RUN!'
+        ]),
+
+        dcc.Input(id='input-id-large', type='text', placeholder="Match ID", value="4223661333"),
+        # dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
+        html.Button('Run', id='button_start', type='submit'),
+
+        # status infomation, e.g. "please wait"
+        html.Div(id='status'),
+
+        # invisible div to safely store the current job-id
+        html.Div(id='job-id', style={'display': 'none'}),
+
+        # this div is the target of the refresh during querying
+        # initially there is no refresh (interval=1 hour) but during
+        # a query it refreshes regularly until the results are ready
+        html.Div([
+
+            dcc.Graph(id='dummy-results'),
+            dcc.Interval(
+                id='update-interval',
+                interval=60*60*5000,  # in milliseconds
+                n_intervals=0
+            )
+
+        ], id='results', style={'width':'75%','margin':25,'textAlign':'center'}),
+    ]),
+
+    # footer
+    dcc.Markdown(children=divider_markdown),
+        # ABOUT ROW
+        html.Div(
+            className='row',
+            children=[
+              html.Div(
+                className='col',
+                children=[
+                  html.P(
+                    'Data extracted from:'
+                  ),
+                  html.A(
+                      'Stratz API',
+                      href='https://stratz.com/'
+                  )
+                ]
+              ),
+              html.Div(
+                className='col',
+                children=[
+                  html.P(
+                    'Code avaliable at:'
+                  ),
+                  html.A(
+                      'Github',
+                      href='https://github.com/SorensenErik/DotA2-Exploration/tree/master/tournamentGoldPercApp'
+                  )
+                ]
+              ),
+              html.Div(
+                className='col',
+                children=[
+                  html.P(
+                    'Made with:'
+                  ),
+                  html.A(
+                      'Dash / Plot.ly',
+                      href='https://plot.ly/dash/'
+                  )
+                ]
+              ),
+              html.Div(
+                className='col',
+                children=[
+                  html.P(
+                    'Developer:'
+                  ),
+                  html.A(
+                      'Erik Sorensen',
+                      href='https://www.linkedin.com/in/erik-sorensen/'
+                  )
+                ]
+              )
+            ]
+        ),
+    ],
+    style={
+        'padding': 40
+    }
+)
+
 
 # @app.callback(
 #     Output(component_id='perc-networth-plot',component_property='figure'),
