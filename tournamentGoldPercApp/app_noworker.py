@@ -63,16 +63,14 @@ app.layout = html.Div([
         html.H2('Player Network Percentage (Large)'),
         html.H3('Instructions:'),
         html.P(children=[
-            'Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.',
+            'This app returns a plot of each players percentage of thier teams total networth over time.',
             html.Br(),
-            'Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.',
-            html.Br(),
-            'When you are ready, click RUN!'
+            'Simply enter in the id of the game you would like to analyze and click RUN!'
         ]),
 
         dcc.Input(id='input-id-large', type='text', placeholder="Match ID", value="4223661333"),
         # dcc.Input(id='input-time', type='text', placeholder='Time',value=''),
-        html.Button('Run', id='button_start', type='submit'),
+        html.Button('Run', id='button_large', type='submit'),
 
         # status infomation, e.g. "please wait"
         html.Div(id='status'),
@@ -85,7 +83,7 @@ app.layout = html.Div([
         # a query it refreshes regularly until the results are ready
         html.Div([
 
-            dcc.Graph(id='dummy-results'),
+            dcc.Graph(id='large-results'),
             dcc.Interval(
                 id='update-interval',
                 interval=60*60*5000,  # in milliseconds
@@ -175,9 +173,8 @@ app.layout = html.Div([
      State('input-time', 'value')])
 def update_value(n_clicks,value_id,value_time):
     print("running")
-    if n_clicks > 0:
+    if n_clicks > 0: # This throws an error for some reason
         df = faster_collect_match_data(value_id,value_time)
-
         return create_plots_fast(df)
 
 @app.callback(
@@ -191,11 +188,15 @@ def update_value(n_clicks,value_id,value_time):
         df = faster_collect_match_data(value_id,value_time)
         return generate_table(df)
 
-    # print(ns1)
-    # print(nb1)
-    # print(ns2)
-    # print(nb2)
-    # print('______')
+@app.callback(
+    Output(component_id='large-results',component_property='figure'),
+    [Input('button_large','n_clicks')],
+    [State('input-id-large','value')])
+def plot_large(n_clicks,value_id):
+    print("running large graph")
+    if n_clicks > 0:
+        return plot_perc_networth_overtime(value_id, 30) # Set to 30 to make runtime much faster
+
 
 # def display_value(value):
 #     return 'You have selected "{}"'.format(value)
