@@ -1,18 +1,11 @@
-# For reference
-# https://dash.plot.ly/dash-core-components/input
-
 import os
-# os.chdir('C:/GitHub/DotA2-Exploration/tournamentGoldPercApp')
+# os.chdir('C:/GitHub/DotA2-Exploration/tournamentGoldPercApp') # for atom hydrogen
 import plotly
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from findPlayerGoldPerc import *
-
-# NOTE!
-# App times out, print statements do not fix it
-# Must do something that the app uses
 
 # markdown docs for layout
 divider_markdown='''
@@ -32,14 +25,13 @@ def generate_table(dataframe, max_rows=1):
         ]) for i in range(len(dataframe))]
     )
 
-# ID = 4247904407
-# plot = create_plots(collect_match_data(ID),'10:0')
-#
-# plot
-
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 server = app.server
+
+# Initialize the pages base html code with custom html
+with open('../baseHTML.html', 'r') as file:
+    app.index_string = file.read()
 
 app.layout = html.Div([
     html.H2('Players Net Worth Percentage'),
@@ -52,9 +44,6 @@ app.layout = html.Div([
     html.Button('Run', id='button'),
     dcc.Graph(
         id='perc-networth-plot'
-        # figure={
-        #     'data': create_plots(collect_match_data(4223661333),'10:0')
-        # }
     ),
     html.Div([html.Table(id='my-table')], style={'width': '25%','display': 'inline-block', 'padding': '0 20'}),
 
@@ -92,80 +81,8 @@ app.layout = html.Div([
 
         ], id='results', style={'width':'75%','margin':25,'textAlign':'center'}),
     ]),
+])
 
-    # footer
-    dcc.Markdown(children=divider_markdown),
-        # ABOUT ROW
-        html.Div(
-            className='row',
-            children=[
-              html.Div(
-                className='col',
-                children=[
-                  html.P(
-                    'Data extracted from:'
-                  ),
-                  html.A(
-                      'Stratz API',
-                      href='https://stratz.com/'
-                  )
-                ]
-              ),
-              html.Div(
-                className='col',
-                children=[
-                  html.P(
-                    'Code avaliable at:'
-                  ),
-                  html.A(
-                      'Github',
-                      href='https://github.com/SorensenErik/DotA2-Exploration/tree/master/tournamentGoldPercApp'
-                  )
-                ]
-              ),
-              html.Div(
-                className='col',
-                children=[
-                  html.P(
-                    'Made with:'
-                  ),
-                  html.A(
-                      'Dash / Plot.ly',
-                      href='https://plot.ly/dash/'
-                  )
-                ]
-              ),
-              html.Div(
-                className='col',
-                children=[
-                  html.P(
-                    'Developer:'
-                  ),
-                  html.A(
-                      'Erik Sorensen',
-                      href='https://www.linkedin.com/in/erik-sorensen/'
-                  )
-                ]
-              )
-            ]
-        ),
-    ],
-    style={
-        'padding': 40
-    }
-)
-
-
-# @app.callback(
-#     Output(component_id='perc-networth-plot',component_property='figure'),
-#     [Input(component_id='input-id',component_property='value'),
-#      Input(component_id='input-time',component_property='value')])
-# @app.callback(
-#     Output(component_id='perc-networth-plot',component_property='figure'),
-#     [Input('input-id', 'n_submit'), Input('input-id', 'n_blur'),
-#     Input('input-time', 'n_submit'), Input('input-time', 'n_blur')],
-#     [State('input-id', 'value'),
-#     State('input-time', 'value')])
 @app.callback(
      Output(component_id='perc-networth-plot',component_property='figure'),
      [Input('button','n_clicks')],
@@ -196,10 +113,6 @@ def plot_large(n_clicks,value_id):
     print("running large graph")
     if n_clicks > 0:
         return plot_perc_networth_overtime(value_id, 30) # Set to 30 to make runtime much faster
-
-
-# def display_value(value):
-#     return 'You have selected "{}"'.format(value)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
