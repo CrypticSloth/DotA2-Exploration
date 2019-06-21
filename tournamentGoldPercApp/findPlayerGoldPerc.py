@@ -9,6 +9,13 @@ The questions i want to be able to ask are like "On NIP who is the player who if
 That one sounds a lot hard
 '''
 
+'''
+Games to test
+
+24:20 - EG vs SVG - Chongqing Major quals - ID: 4247904407
+EG vs NiP - Kuala Lumpar - ID: 4223661333
+Normal pub game : 4238597770
+'''
 import requests
 import numpy as np
 import pandas as pd
@@ -47,11 +54,12 @@ def collect_league_data():
 
     return team_data
 
-def collect_match_data(ID = 4238597779):
+def collect_match_data(ID = 4238597779, zoom_out = 1):
     '''
     Lets start easy and start with getting individual match data per match id
 
     Function will parse a match id for player gold on both sides with player gold percentages at each moment in the game.
+
     '''
 
     start_time = tm.time()
@@ -64,30 +72,56 @@ def collect_match_data(ID = 4238597779):
     match = json.loads(games)
     print("time to load matches from api: {}".format(tm.time() - request_time))
 
+    # match['players'][3]['eventData']['playerUpdateGoldEvents'] # there is a differing number of indexes before time=0 which causes the bug
+
     df = pd.DataFrame()
     names = []
     for p in range(10):
-        names.append(match['players'][p]['proPlayerName'])
-        # names.append(match['players'][p]['name'])
-    # match['players'][0]['eventData']['playerUpdateGoldEvents']
+        # Would like this to work for all games, not just pro games. Needs bug squashing
+        try:
+            names.append(match['players'][p]['proPlayerName']) # This erros if a proPlayerName does not exist
+        except:
+            names.append(match['players'][p]['name'])
+            continue
+
+    print(names)
+
+    # match['players'][0]['eventData']['playerUpdateGoldEvents'][100-3]
     time = []
+    counter = 0
     for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
+        # Use a counter to count how many items are time < 0. This counter will be used to offset
+        # the index so that the ones that are below 0 will not be counted and all indexes will start at 0
+        # after the below 0 time indexes are acounted for
+        if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] < 0:
+            counter += 1
+
         if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
-            time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+            if (i-counter+1) % zoom_out == 0:
+                time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i-counter+1]['time'])
+
     # Convert time format
     new_time = ['{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1]) for sec in time]
     df['time'] = new_time
-    len(time)
 
     for p in range(10):
+        counter = 0
         gold = []
         net_worth = []
         for x in range(len(match['players'][p]['eventData']['playerUpdateGoldEvents'])):
+            # Use a counter to count how many items are time < 0. This counter will be used to offset
+            # the index so that the ones that are below 0 will not be counted and all indexes will start at 0
+            # after the below 0 time indexes are acounted for
+            if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] < 0:
+                counter += 1
+                # print(counter)
             if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] > 0:
-                gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['gold'])
-                net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['networth'])
-        df['{}_gold'.format(match['players'][p]['proPlayerName'])] = gold
-        df['{}_networth'.format(match['players'][p]['proPlayerName'])] = net_worth
+                # print(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'])
+                if (x-counter+1) % zoom_out == 0:
+                    gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['gold'])
+                    net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['networth'])
+        df['{}_gold'.format(names[p])] = gold
+        df['{}_networth'.format(names[p])] = net_worth
 
     # Add player percentage of net worth to the data frame
     # For inserting columns: DataFrame.insert(loc, column, value, allow_duplicates=False)
@@ -125,11 +159,11 @@ def collect_match_data(ID = 4238597779):
 # divmod(seconds, 60)[1]
 # test
 
-def plot_perc_networth_overtime(dataframe):
+def plot_perc_networth_overtime(match_ID, zoom_out = 1):
     '''
     Create a plotly plot of the player gold percentage of both radiant and dire sides over the entire game
     '''
-    # dataframe = collect_match_data()
+    dataframe = collect_match_data(match_ID, zoom_out)
 
     df_time = dataframe['time']
     data = dataframe.filter(like="_networth_percentage")
@@ -265,8 +299,11 @@ def faster_collect_match_data(ID,time="10:00"):
     # Collect player names
     names = []
     for p in range(10):
-        names.append(match['players'][p]['proPlayerName'])
-        # names.append(match['players'][p]['name'])
+        try:
+            names.append(match['players'][p]['proPlayerName'])
+        except:
+            names.append(match['players'][p]['name'])
+            continue
     # match['players'][0]['eventData']['playerUpdateGoldEvents']
     # time = []
     # for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
@@ -383,10 +420,13 @@ def create_plots_fast(data):
 
 if __name__ == '__main__':
 
-    # Hour long Kuala Lumpuar EG vs NiP = 4223661333
+    # 24:20 - EG vs SVG - Chongqing Major quals - ID: 4247904407
+    # EG vs NiP - Kuala Lumpar - ID: 4223661333
+    # Normal pub game : 4238597770
+    
     entire_time = tm.time()
-    plot(plot_perc_networth_overtime(collect_match_data(4223661333)))
+    plot(plot_perc_networth_overtime(4238597770,5))
     print("time to run entire operation: {}".format(tm.time() - entire_time))
 
-    # create_plots_fast(faster_collect_match_data(4223661333,'10:0'))
+    plot(create_plots_fast(faster_collect_match_data(4238597770,'10:0')))
     # plot(go.Figure(data=[go.Bar(x=[1,2,3],y=[2,3,4])]))

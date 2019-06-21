@@ -6,16 +6,17 @@ import numpy as np
 import json
 from pathlib import Path
 from datetime import datetime
-import sys 
+import sys
 from current_dota_version import current_dota_version
 import time
 
-path = '../versions_test'
+# path = '../versions_test'
+path = 'E:/DataSets/versions_test'
 current_time = datetime.now().strftime('%m/%d/%Y %H:%M')
 
 ##### There should be a different file that checks the current version of dota #######
 # Current version of dota right now
-game_version = current_dota_version() #version grabbed from dota2.gamepedia.com/GameVersion 
+game_version = current_dota_version() #version grabbed from dota2.gamepedia.com/GameVersion
 
 # Check to see if the version path exists. If it doesnt, create a new version path and work in that directory
 version_path = Path('{:}/{:}'.format(path, game_version))
@@ -51,7 +52,13 @@ def Parser():
 		with open('{:}/{:}/{:}.json'.format(path, game_version, match),'r') as outfile:
 			data = json.load(outfile)
 		# Add the information that we want to the file
-		data['pro_team_data'] = {'match_id':proMatches[counter]['match_id'],'radiant_team_id':proMatches[counter]['radiant_team_id'],'radiant_name':proMatches[counter]['radiant_name'],'dire_team_id':proMatches[counter]['dire_team_id'],'dire_name':proMatches[counter]['dire_name'],'league_id':proMatches[counter]['leagueid'],'league_name':proMatches[counter]['league_name']}
+		data['pro_team_data'] = {'match_id':proMatches[counter]['match_id'],
+                                'radiant_team_id':proMatches[counter]['radiant_team_id'],
+                                'radiant_name':proMatches[counter]['radiant_name'],
+                                'dire_team_id':proMatches[counter]['dire_team_id'],
+                                'dire_name':proMatches[counter]['dire_name'],
+                                'league_id':proMatches[counter]['leagueid'],
+                                'league_name':proMatches[counter]['league_name']}
 		data['date_collected'] = current_time
 		counter += 1
 
@@ -72,7 +79,7 @@ def Parser():
 		except:
 			print("Error loading eventData for match: {:}".format(str(match)))
 			continue
-		
+
 		# Load in match event data
 		try:
 			data['eventData'] = stratz_details['eventData']
