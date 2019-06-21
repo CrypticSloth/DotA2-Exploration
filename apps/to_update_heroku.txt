@@ -1,6 +1,6 @@
 Type in this command to push updates to heroku repo
 
-git subtree push --prefix apps heroku master
+git subtree push --prefix [app folder name] heroku master
 
 We do this because heroku expects the app to be in the root directory.
 We can use the subtree module to only push the subdirectory to get around this.
@@ -14,7 +14,7 @@ then create a heroku account and login with
 heroku login
 
 then add your app to the git remote
-heroku git:remote -a yourapp
+heroku git:remote -a [yourapp]
 
 then you can push it!
 
