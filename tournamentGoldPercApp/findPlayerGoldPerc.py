@@ -72,33 +72,34 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
     match = json.loads(games)
     print("time to load matches from api: {}".format(tm.time() - request_time))
 
-    # match['players'][3]['eventData']['playerUpdateGoldEvents'] # there is a differing number of indexes before time=0 which causes the bug
+    # match['players'][3]['playbackData']['playerUpdateGoldEvents'] # there is a differing number of indexes before time=0 which causes the bug
 
     df = pd.DataFrame()
     names = []
+
     for p in range(10):
         # Would like this to work for all games, not just pro games. Needs bug squashing
         try:
-            names.append(match['players'][p]['proPlayerName']) # This erros if a proPlayerName does not exist
+            names.append(match['players'][p]['steamAccount']['proSteamAccount']['name']) # This erros if a proPlayerName does not exist
         except:
-            names.append(match['players'][p]['name'])
+            names.append(match['players'][p]['steamAccount']['name'])
             continue
 
     print(names)
 
-    # match['players'][0]['eventData']['playerUpdateGoldEvents'][100-3]
+    # match['players'][0]['playbackData']['playerUpdateGoldEvents'][100-3]
     time = []
     counter = 0
-    for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
+    for i in range(len(match['players'][0]['playbackData']['playerUpdateGoldEvents'])):
         # Use a counter to count how many items are time < 0. This counter will be used to offset
         # the index so that the ones that are below 0 will not be counted and all indexes will start at 0
         # after the below 0 time indexes are acounted for
-        if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] < 0:
+        if match['players'][0]['playbackData']['playerUpdateGoldEvents'][i]['time'] < 0:
             counter += 1
 
-        if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
+        if match['players'][0]['playbackData']['playerUpdateGoldEvents'][i]['time'] > 0:
             if (i-counter+1) % zoom_out == 0:
-                time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i-counter+1]['time'])
+                time.append(match['players'][0]['playbackData']['playerUpdateGoldEvents'][i-counter+1]['time'])
 
     # Convert time format
     new_time = ['{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1]) for sec in time]
@@ -108,18 +109,18 @@ def collect_match_data(ID = 4238597779, zoom_out = 1):
         counter = 0
         gold = []
         net_worth = []
-        for x in range(len(match['players'][p]['eventData']['playerUpdateGoldEvents'])):
+        for x in range(len(match['players'][p]['playbackData']['playerUpdateGoldEvents'])):
             # Use a counter to count how many items are time < 0. This counter will be used to offset
             # the index so that the ones that are below 0 will not be counted and all indexes will start at 0
             # after the below 0 time indexes are acounted for
-            if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] < 0:
+            if match['players'][p]['playbackData']['playerUpdateGoldEvents'][x]['time'] < 0:
                 counter += 1
                 # print(counter)
-            if match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'] > 0:
-                # print(match['players'][p]['eventData']['playerUpdateGoldEvents'][x]['time'])
+            if match['players'][p]['playbackData']['playerUpdateGoldEvents'][x]['time'] > 0:
+                # print(match['players'][p]['playbackData']['playerUpdateGoldEvents'][x]['time'])
                 if (x-counter+1) % zoom_out == 0:
-                    gold.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['gold'])
-                    net_worth.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][x-counter+1]['networth'])
+                    gold.append(match['players'][p]['playbackData']['playerUpdateGoldEvents'][x-counter+1]['gold'])
+                    net_worth.append(match['players'][p]['playbackData']['playerUpdateGoldEvents'][x-counter+1]['networth'])
         df['{}_gold'.format(names[p])] = gold
         df['{}_networth'.format(names[p])] = net_worth
 
@@ -266,9 +267,9 @@ def plot_perc_networth_overtime(match_ID, zoom_out = 1):
 # match = json.loads(games)
 #
 # time = []
-# for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
-#     if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] >= 0:
-#         time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+# for i in range(len(match['players'][0]['playbackData']['playerUpdateGoldEvents'])):
+#     if match['players'][0]['playbackData']['playerUpdateGoldEvents'][i]['time'] >= 0:
+#         time.append(match['players'][0]['playbackData']['playerUpdateGoldEvents'][i]['time'])
 #
 # sec = 100
 # new_time = '{:}:{:}'.format(divmod(sec,60)[0],divmod(sec,60)[1])
@@ -279,7 +280,7 @@ def plot_perc_networth_overtime(match_ID, zoom_out = 1):
 #
 # time[old_time - 1]
 #
-# match['players'][0]['eventData']['playerUpdateGoldEvents']
+# match['players'][0]['playbackData']['playerUpdateGoldEvents']
 
 def faster_collect_match_data(ID,time="10:00"):
 
@@ -300,15 +301,15 @@ def faster_collect_match_data(ID,time="10:00"):
     names = []
     for p in range(10):
         try:
-            names.append(match['players'][p]['proPlayerName'])
+            names.append(match['players'][p]['steamAccount']['proSteamAccount']['name']) # This erros if a proPlayerName does not exist
         except:
-            names.append(match['players'][p]['name'])
+            names.append(match['players'][p]['steamAccount']['name'])
             continue
-    # match['players'][0]['eventData']['playerUpdateGoldEvents']
+    # match['players'][0]['playbackData']['playerUpdateGoldEvents']
     # time = []
-    # for i in range(len(match['players'][0]['eventData']['playerUpdateGoldEvents'])):
-    #     if match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'] > 0:
-    #         time.append(match['players'][0]['eventData']['playerUpdateGoldEvents'][i]['time'])
+    # for i in range(len(match['players'][0]['playbackData']['playerUpdateGoldEvents'])):
+    #     if match['players'][0]['playbackData']['playerUpdateGoldEvents'][i]['time'] > 0:
+    #         time.append(match['players'][0]['playbackData']['playerUpdateGoldEvents'][i]['time'])
 
     # Convert time format into an index
     min,sec = time.split(":")
@@ -321,9 +322,9 @@ def faster_collect_match_data(ID,time="10:00"):
     for p in range(10):
         net_worth = []
         if p < 5:
-            rad_networths.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][index]['networth'])
+            rad_networths.append(match['players'][p]['playbackData']['playerUpdateGoldEvents'][index]['networth'])
         else:
-            dire_networths.append(match['players'][p]['eventData']['playerUpdateGoldEvents'][index]['networth'])
+            dire_networths.append(match['players'][p]['playbackData']['playerUpdateGoldEvents'][index]['networth'])
 
     rad_networths
     dire_networths
@@ -423,7 +424,7 @@ if __name__ == '__main__':
     # 24:20 - EG vs SVG - Chongqing Major quals - ID: 4247904407
     # EG vs NiP - Kuala Lumpar - ID: 4223661333
     # Normal pub game : 4238597770
-    
+
     entire_time = tm.time()
     plot(plot_perc_networth_overtime(4238597770,5))
     print("time to run entire operation: {}".format(tm.time() - entire_time))

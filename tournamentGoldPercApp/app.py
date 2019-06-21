@@ -34,22 +34,14 @@ with open('../baseHTML.html', 'r') as file:
     app.index_string = file.read()
 
 app.layout = html.Div([
-    html.H2('Players Net Worth Percentage'),
-    html.H3('Instructions:'),
-    html.Div('Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.'),
-    html.Div('Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:35.'),
-    html.Div('When you are ready, click RUN! '),
-    dcc.Input(id='input-id', type='text', placeholder="Match ID",value= "4223661333"),
-    dcc.Input(id='input-time', type='text', placeholder='Time',value='10:30'),
-    html.Button('Run', id='button'),
-    dcc.Graph(
-        id='perc-networth-plot'
-    ),
-    html.Div([html.Table(id='my-table')], style={'width': '25%','display': 'inline-block', 'padding': '0 20'}),
 
-    # Large Applet
     html.Div([
-        html.H2('Player Network Percentage (Large)'),
+        html.H4('Warning:'),
+        html.P("Some match id's will not work if they have not been parsed by the Stratz API. All professional games should be parsed, but if not, the graphs will not load.")
+    ]),
+
+    html.Div([
+        html.H2('Player Network Percentage Over Time'),
         html.H3('Instructions:'),
         html.P(children=[
             'This app returns a plot of each players percentage of thier teams total networth over time.',
@@ -80,6 +72,23 @@ app.layout = html.Div([
             )
 
         ], id='results', style={'width':'75%','margin':25,'textAlign':'center'}),
+    ]),
+
+    html.Div([
+        html.H2('Players Net Worth Percentage at One Time'),
+        html.H3('Instructions:'),
+        html.Div('Put the match ID you are interested getting stats from in the first slot and put the time into the second slot.'),
+        html.Div('Make sure the time is in the format like how you see it in game (MM:SS). For example: 10:30.'),
+        html.Div('When you are ready, click RUN! '),
+        dcc.Input(id='input-id', type='text', placeholder="Match ID",value= "4223661333"),
+        dcc.Input(id='input-time', type='text', placeholder='Time',value='10:30'),
+        html.Button('Run', id='button'),
+        html.Div([
+            dcc.Graph(
+                id='perc-networth-plot'
+            ),
+        ], style={'width':'75%','margin':25,'textAlign':'center'}),
+        html.Div([html.Table(id='my-table')], style={'width': '25%','display': 'inline-block', 'padding': '0 20'})
     ]),
 ])
 
@@ -115,4 +124,4 @@ def plot_large(n_clicks,value_id):
         return plot_perc_networth_overtime(value_id, 30) # Set to 30 to make runtime much faster
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
