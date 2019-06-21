@@ -1,2 +1,2 @@
-web: gunicorn app:server --timeout 30 --log-file=-
+web: gunicorn app:server --timeout 30 --log-file -
 worker: python worker.py

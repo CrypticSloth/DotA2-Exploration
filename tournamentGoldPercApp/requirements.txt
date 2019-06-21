@@ -5,9 +5,13 @@ dash-core-components==0.48.0
 dash-html-components==0.16.0
 dash-renderer==0.24.0
 dash-table==3.7.0
+django
+django-heroku
+fcntl
 Flask==1.0.2
 Flask-Compress==1.4.0
 Flask-SeaSurf==0.2.2
+gunicorn
 html5lib==1.0.1
 Jinja2==2.10
 numpy==1.16.2
