@@ -7,11 +7,6 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from findPlayerGoldPerc import *
 
-# markdown docs for layout
-divider_markdown='''
-***
-'''
-
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 def generate_table(dataframe, max_rows=1):
@@ -30,7 +25,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 
 # Initialize the pages base html code with custom html
-with open('../baseHTML.html', 'r') as file:
+with open('baseHTML.html', 'r') as file:
     app.index_string = file.read()
 
 app.layout = html.Div([
