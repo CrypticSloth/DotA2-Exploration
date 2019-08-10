@@ -74,17 +74,17 @@ def Parser():
 		# Add in eventData for each player from the stratz API
 		try:
 			for i in range(len(stratz_details['players'])):
-				data['players'][i]['eventData'] = stratz_details['players'][i]['playbackData']
+				data['players'][i]['stratzData'] = stratz_details['players'][i]
 			print('Extracted data from match: {:}'.format(str(match)))
 		except:
-			print("Error loading player eventData for match: {:}".format(str(match)))
+			print("Error loading player stratzData for match: {:}".format(str(match)))
 			continue
 
 		# Load in match event data
 		try:
 			data['eventData'] = stratz_details['playbackData']
 		except:
-			print("Error loading match eventData for match: {:}".format(str(match)))
+			print("Error loading match stratzData for match: {:}".format(str(match)))
 			continue
 
 		# Save the file back to disk
