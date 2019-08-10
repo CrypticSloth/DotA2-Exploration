@@ -1,0 +1,1 @@
+8/10/19: Started collecting all player stratz data instead of just each players playbackData. Path for this is now data['players'][i]['stratzData']['playbackData'] instead of data['players'][i]['playbackData']
