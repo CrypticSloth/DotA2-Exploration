@@ -4,6 +4,7 @@ import requests
 
 def current_dota_version():
 	page = requests.get('https://dota2.gamepedia.com/Game_Versions')
+    # page = requests.get('https://dota2.gamepedia.com/Patches')
 	data = page.text
 	soup = BeautifulSoup(data,'lxml')
 	version_links = soup.find_all('a', class_='mw-redirect')
@@ -20,5 +21,6 @@ def current_dota_version():
 	    except:
 	        continue
 
-	current_version = cleaned_versions[0]
+	current_version = cleaned_versions[1]
+    
 	return(current_version)

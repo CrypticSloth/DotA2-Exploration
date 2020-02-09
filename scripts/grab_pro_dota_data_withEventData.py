@@ -1,5 +1,7 @@
 # Test File
 # Sudo code (just getting the ideas for how the program should run and laying it out)
+# import os
+# os.chdir('C:/Github/DotA2-Exploration/scripts')
 
 import requests
 import numpy as np
@@ -17,7 +19,7 @@ current_time = datetime.now().strftime('%m/%d/%Y %H:%M')
 ##### There should be a different file that checks the current version of dota #######
 # Current version of dota right now
 game_version = current_dota_version() #version grabbed from dota2.gamepedia.com/GameVersion
-
+game_version
 # Check to see if the version path exists. If it doesnt, create a new version path and work in that directory
 version_path = Path('{:}/{:}'.format(path, game_version))
 
