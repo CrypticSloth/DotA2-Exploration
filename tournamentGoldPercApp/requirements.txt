@@ -12,7 +12,7 @@ Flask-Compress==1.4.0
 Flask-SeaSurf==0.2.2
 gunicorn
 html5lib==1.0.1
-Jinja2==2.10
+Jinja2==2.11.3
 numpy==1.16.2
 numpydoc==0.8.0
 pandas==0.24.2
